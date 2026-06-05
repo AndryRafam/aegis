@@ -1,7 +1,7 @@
-![](https://img.shields.io/badge/Code-C++-brigthgreen.svg?style=for-the-badge&logo=c%2B%2B)
-![](https://img.shields.io/badge/OS-Linux-brigthgreen.svg?style=for-the-badge&logo=Linux)
-![](https://img.shields.io/badge/Algorithm-XCHACHA20POLY1305-brigthgreen.svg?style=for-the-badge&logo)
-![](https://img.shields.io/badge/Algorithm-SHA-brigthgreen.svg?style=for-the-badge&logo)
+![](https://img.shields.io/badge/Code-C++-orange.svg?style=for-the-badge&logo=c%2B%2B)
+![](https://img.shields.io/badge/OS-Linux-orange.svg?style=for-the-badge&logo=Linux)
+![](https://img.shields.io/badge/Algorithm-XCHACHA20POLY1305-orange.svg?style=for-the-badge&logo)
+![](https://img.shields.io/badge/Algorithm-SHA-orange.svg?style=for-the-badge&logo)
 
 <h1 align="left"> HadesCrypt (v1) </h1>
 
