@@ -5,7 +5,7 @@
 
 <h1 align="left"> HadesCrypt (v1) </h1>
 
-![Output](https://github.com/AndryRafam/Program-Output/blob/master/enc_dec_xchacha.gif)
+![Output](https://github.com/AndryRafam/Program-Output/blob/master/enc_dec_neptune.gif)
 
 <h3 algin="left"> About </h3>
 
