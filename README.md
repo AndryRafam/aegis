@@ -17,11 +17,11 @@ Password is generated randomly.
 
 <h3 align="left"> Encryption </h3>
 
-![Output] (https://github.com/AndryRafam/Program-Output/blob/master/encryption_xchacha.gif)
+![Output](https://github.com/AndryRafam/Program-Output/blob/master/encryption_xchacha.gif)
 
 <h3 align="left"> Decryption </h3>
 
-![Output] (https://github.com/AndryRafam/Program-Output/blob/master/decryption_xchacha.gif)
+![Output](https://github.com/AndryRafam/Program-Output/blob/master/decryption_xchacha.gif)
 
 <h1 align="left"> WARNING !!! </h1>
 
