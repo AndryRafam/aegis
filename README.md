@@ -5,6 +5,8 @@
 
 <h1 align="left"> HadesCrypt (v1) </h1>
 
+![Output](https://github.com/AndryRafam/Program-Output/blob/master/enc_dec_xchacha.gif)
+
 <h3 algin="left"> About </h3>
 
 HadesCrypt is a lightweight CLI encryption (decryption) software using XChaCha20Poly1305 as an encryption algorithm and SHA256 as an hash key derivation function. The software encrypts files and folders.
@@ -14,14 +16,6 @@ Password is generated randomly.
 - Cryptographic Library: CryptoPP
 - Debugging: GNU Debugger, Valgrind
 - OS: Linux (Debian, Fedora)
-
-<h3 align="left"> Encryption </h3>
-
-![Output](https://github.com/AndryRafam/Program-Output/blob/master/encryption_xchacha.gif)
-
-<h3 align="left"> Decryption </h3>
-
-![Output](https://github.com/AndryRafam/Program-Output/blob/master/decryption_xchacha.gif)
 
 <h1 align="left"> WARNING !!! </h1>
 
