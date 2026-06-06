@@ -9,7 +9,7 @@
 
 <h2 algin="left"> About </h2>
 
-NeptuneCrypt is a lightweight CLI encryption (decryption) software using XChaCha20Poly1305 as an encryption algorithm and SHA256 as an hash key derivation function. The software encrypts files and folders.
+NeptuneCrypt is a lightweight CLI encryption (decryption) software using XChaCha20Poly1305 as cipher and SHA256 as hash key derivation function. The software encrypts files and folders.
 Password is generated randomly.
 
 - Programming Language: C++ (std 23)
