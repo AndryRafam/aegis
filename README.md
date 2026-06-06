@@ -15,6 +15,12 @@ Password is generated randomly.
 - Debugging: GNU Debugger, Valgrind
 - OS: Linux (Debian, Fedora)
 
+<h3 align="left"> Encryption </h3>
+![Output](https://github.com/AndryRafam/Program-Output/blob/master/encryption_xchacha.gif)
+
+<h3 align="left"> Decryption </h3>
+![Output](https://github.com/AndryRafam/Program-Output/blob/master/decryption_xchacha.gif)
+
 <h1 align="left"> WARNING !!! </h1>
 
 THIS SOFTWARE IS FOR PERSONAL USE ONLY. IT IS NOT INTENDED FOR INDUSTRIAL OR PROFESSIONAL USE.
