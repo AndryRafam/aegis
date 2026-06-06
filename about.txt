@@ -1,0 +1,13 @@
+﻿ 
+ NeptuneCrypt Copyright © 2026 Andry RAFAM ANDRIANJAFY.
+
+ NeptuneCrypt is a free open-source encryption (decryption)
+ software using XChaCha20Poly1305 as an encryption algorithm.
+ 
+ Password is generated randomly.
+ You can choose the password length between 16 to 256 characters.
+ 
+ This software comes with ABSOLUTELY NO WARRANTY.
+	
+ License: MIT
+==================================================================
