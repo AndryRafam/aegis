@@ -1,0 +1,12 @@
+﻿ 
+ HadesCrypt Copyright © 2026 Andry RAFAM ANDRIANJAFY.
+
+ HadesCrypt is an encryption (decryption) software using
+ XChaCha20Poly1305 as an encryption algorithm.
+ Password is generated randomly.
+ You can choose the password length between 16 to 256 characters.
+ This software comes with ABSOLUTELY NO WARRANTY.
+ This is a free software, and you are welcome to redistribute it.
+	
+ License: MIT
+=================================================================
