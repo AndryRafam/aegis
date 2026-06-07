@@ -27,7 +27,7 @@ The software was built with C++ (std=23) and CryptoPP: https://github.com/weidai
 To build NeptuneCrypt, run the following command
 
 ```bash
-$make
+$ make
 ```
 
 <h2 align="left"> Future version </h2>
