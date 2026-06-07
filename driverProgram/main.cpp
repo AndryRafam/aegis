@@ -93,7 +93,7 @@ int main(/*int argc, char **argv*/) {
 				std::string password_xchacha20;
 				std::cout << "Enter your password >: ";
 				setEcho(false); // disable mirroring input to the screen
-				std::getline(std::cin, password_xchacha20);
+				std::getline(std::cin, password_xchacha20); // password will not be outputed for security reason
 				setEcho(true); //
 				std::cout << std::endl;
 				xchacha20_file(mode, filePath, password_xchacha20);
