@@ -9,11 +9,10 @@
 
 <h2 algin="left"> About </h2>
 
-NeptuneCrypt is a lightweight CLI encryption (decryption) software using XChaCha20Poly1305 as cipher and SHA256 as hash key derivation function. This V1 version encrypts files only, including compressed files such as .7z, .zip, .tar, .rar etc.
+NeptuneCrypt is a lightweight CLI encryption (decryption) software using XChaCha20Poly1305, Aes256-gcm as ciphers; XChaCha-Aes for cascade cipher (xchacha over aes) and SHA256 as hash key derivation function. This V1 version encrypts files only, including compressed files such as .7z, .zip, .tar, .rar etc and uses XChaCha as cipher.
+The software was built with C++ (std=23) and CryptoPP: https://github.com/weidai11/cryptopp
 
-<h3 align="left"> Tools </h3>
+<h3 align="left"> Coming up </h3>
 
-- Programming Language: C++ (std 23)
-- Cryptographic Library: CryptoPP
-- Debugging: GNU Debugger, Valgrind
-- OS: Linux (Debian, Fedora)
+- V2 version: V1 version + Aes256-gcm as cipher and also encrypts folder.
+- V3 version: V2 version + cascade cipher XChaCha-Aes (xchacha over aes).
