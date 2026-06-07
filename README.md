@@ -1,7 +1,6 @@
-![](https://img.shields.io/badge/Code-C++-orange.svg?style=for-the-badge&logo=c%2B%2B)
-![](https://img.shields.io/badge/OS-Linux-orange.svg?style=for-the-badge&logo=Linux)
-![](https://img.shields.io/badge/Algorithm-XCHACHA20POLY1305-orange.svg?style=for-the-badge&logo)
-![](https://img.shields.io/badge/Algorithm-SHA-orange.svg?style=for-the-badge&logo)
+[![C++](https://img.shields.io/badge/Code-C++-orange.svg?style=for-the-badge&logo=c%2B%2B)](#)
+[![Debian](https://img.shields.io/badge/Debian-A81D33?logo=debian&logoColor=fff)](#)
+[![Fedora](https://img.shields.io/badge/Fedora-51A2DA?logo=fedora&logoColor=fff)](#)
 
 <h1 align="left"> NeptuneCrypt (v1) </h1>
 
