@@ -14,7 +14,7 @@ NeptuneCrypt is a lightweight CLI encryption (decryption) software using XChaCha
 This V1 version encrypts files only, including compressed files such as .7z, .zip, .tar, .rar etc and uses XChaCha as cipher.
 The software was built with C++ (std=23) and CryptoPP: https://github.com/weidai11/cryptopp
 
-<h3 align="left"> Coming up </h3>
+<h3 align="left"> Future version </h3>
 
 - V2 version: V1 version + Aes256-gcm as cipher and also encrypts folders.
 - V3 version: V2 version + cascade cipher XChaCha-Aes (xchacha over aes).
