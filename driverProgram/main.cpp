@@ -7,7 +7,7 @@
 #include <termios.h>
 #include <unistd.h>
 
-#include "../xchacha20file/xchacha20fileCipher.hpp"
+#include "../fileCipher/xchacha20fileCipher.hpp"
 #include "../password/password_generator.hpp"
 
 #define yellow "\x1B[33m"
