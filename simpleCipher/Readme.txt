@@ -1,1 +1,1 @@
-This folder contains the encryption algorithm implementation using cryptoPP.
+This folder contains the cipher function for files (and folders) encryption.
