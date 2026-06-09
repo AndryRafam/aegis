@@ -1,4 +1,4 @@
-ccsrc = $(wildcard simpleCipher/fileCipher/*.cpp) \
+ccsrc = $(wildcard simpleCipher/*.cpp) \
 		$(wildcard password/*.cpp) \
 		$(wildcard driverProgram/*.cpp)
 		
