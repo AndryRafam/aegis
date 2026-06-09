@@ -7,7 +7,7 @@
 #include <termios.h>
 #include <unistd.h>
 
-#include "../simpleCipher/fileCipher/xchacha20fileCipher.hpp"
+#include "../simpleCipher/xchacha20fileCipher.hpp"
 #include "../password/password_generator.hpp"
 
 #define yellow "\x1B[33m"
@@ -38,13 +38,6 @@ int main(/*int argc, char **argv*/) {
 	std::string mode;
 	std::cin >> mode;
 	std::cin.ignore();
-	
-	// this part of the code
-	// will be available on V2 version
-	/*std::cout << "Target type ? (file/folder) >: ";
-	std::string target_type;
-	std::cin >> target_type;
-	std::cin.ignore();*/
 	
 	// encryption
 	if (mode=="e" || mode=="encrypt") {
@@ -129,3 +122,4 @@ void setEcho(bool enable) {
 	// apply the modified attributes
 	tcsetattr(STDIN_FILENO, TCSANOW, &tty);
 }
+	
