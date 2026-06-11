@@ -18,3 +18,4 @@ neptune: $(obj)
 .PHONY: clean
 clean:
 	rm -f $(obj) $(deps) neptune
+
