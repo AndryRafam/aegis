@@ -31,7 +31,7 @@ $ make
 ```
 <h2 align="left"> How to encrypt folders ? </h2>
 
-Encrypting file is straightforward. To encrypt folder, first compress the folder and then encrypt with NeptuneCrypt.
+Encrypting file is straightforward. To encrypt folder, first compress/archive the folder (.7z, .zip, .rar, .tar etc.) and then encrypt with NeptuneCrypt.
 
 <h2 align="left"> Future upgrade </h2>
 
