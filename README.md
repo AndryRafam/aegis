@@ -4,14 +4,14 @@
 
 <h1 align="left"> NeptuneCrypt (v1) </h1>
 
-![Output](https://github.com/AndryRafam/NeptuneCrypt/blob/main/output/demo.gif)
-
 <h2 algin="left"> About </h2>
 
 NeptuneCrypt is a lightweight CLI encryption software using XChaCha20Poly1305 as cipher for simple encryption and XChaCha-Aes for cascade encryption (xchacha over aes) and SHA256 as hash key derivation function. 
 
 This V1 version encrypts files and folders using simple encryption only.
 The software was built with C++ (std=23) and CryptoPP: https://github.com/weidai11/cryptopp
+
+![Output](https://github.com/AndryRafam/NeptuneCrypt/blob/main/output/demo.gif)
 
 <h2 align="left"> Tools and Requierments for building </h2>
 
