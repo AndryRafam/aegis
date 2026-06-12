@@ -7,7 +7,7 @@
 
 using namespace CryptoPP;
 
-void xchacha20filefolder(std::string mode, std::string filePath, std::string password) {
+bool xchacha20filefolder(std::string mode, std::string filePath, std::string password) {
 	
 	// temporary file to avoid
 	// data loss
@@ -51,9 +51,7 @@ void xchacha20filefolder(std::string mode, std::string filePath, std::string pas
 			std::remove(tempfile.c_str()); // remove the tempfile
 			std::rename(tempfile_hex.c_str(), filePath.c_str()); // rename the hexadecimal encrypted file
 			
-			std::cout << "\e[1m" << yellow << "Encrypted" << "\e[0m" << reset << "\n\n";
-			
-			return;
+			return true;
 		}
 		// decryption
 		else {
@@ -68,16 +66,12 @@ void xchacha20filefolder(std::string mode, std::string filePath, std::string pas
 			AuthenticatedDecryptionFilter df(decryptor, new FileSink(tempfile.c_str()));
 			FileSource(tempfile_hex.c_str(), true, new Redirector(df));
 			
-			if(df.GetLastResult()==true) {
-				std::cout << "\e[1m" << yellow << "Decrypted" << "\e[0m" << reset << "\n\n";
+			if(true==df.GetLastResult()) {
+				std::remove(filePath.c_str()); // remove the former filePath
+				std::remove(tempfile_hex.c_str()); // remove the intermediate file
+				std::rename(tempfile.c_str(), filePath.c_str()); // rename the decrypted file
 			}
-			
-			std::remove(filePath.c_str()); // remove the former filePath
-			std::remove(tempfile_hex.c_str()); // remove the intermediate file
-			std::rename(tempfile.c_str(), filePath.c_str()); // rename the decrypted file
-			
-			return;
-			
+			return true;
 		}
 	}
 	
@@ -90,7 +84,7 @@ void xchacha20filefolder(std::string mode, std::string filePath, std::string pas
 		// remove the temporary file even decryption failed.
 		std::remove(tempfile.c_str());
 		std::remove(tempfile_hex.c_str());
-		exit(1);
+		
+		return false;
 	}
-	return;
 }
