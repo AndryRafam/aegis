@@ -5,9 +5,9 @@
  XChaCha20Poly1305 as cipher for single encryption and XChaCha-Aes
  as cascade cipher for cascade encryption.
  
- Password is generated randomly.
- You can choose the password length between 16 to 256 characters.
- 
+ Password is randomly generated. The password length is between
+ 16 to 64 characters long.
+
  This software comes with ABSOLUTELY NO WARRANTY.
 	
  License: MIT
