@@ -40,7 +40,7 @@ int main(/*int argc, char **argv*/) {
 	// encryption
 	if (mode=="e" || mode=="encrypt") {
 	
-		std::cout << "\e[1m" << "Encryption mode" << "\e[0m" << std::endl;
+		std::cout << "\e[1mEnrolling Encryption Mode\e[0m" << std::endl;
 
 		label_1_file_path:
 			std::cout << "File absolute path >: ";
@@ -52,54 +52,35 @@ int main(/*int argc, char **argv*/) {
 		if(std::filesystem::exists(filePath)) {
 
 			int cipher_selection; // select between xchacha20 et sm4
-			std::cout << "\n" << "\e[1m" << "Select cipher" << "\e[0m" <<  std::endl;
-			std::cout << "1: SM4-GCM" << std::endl;
-			std::cout << "2: XChaCha20Poly1305" << std::endl;
-			std::cout << "Choice >: ";
+			std::cout << "\n\e[1mSelect cipher\e[0m\n1: SM4-GCM\n2: XChaCha20Poly1305\nChoice >: ";
 			std::cin >> cipher_selection;
 			std::cin.ignore();
+
+			/*Initialize random number [16,64] length
+			using mersene twister*/
+			std::random_device rd;
+			std::mt19937 gen(rd());
+			std::uniform_int_distribution<int> distrib(16,64);
+			int passLen = distrib(gen);
+			std::string password = generatePassword(passLen);
 
 			if(cipher_selection==1) { // SM4-GCM
 				
 				std::cout << "\n" << "\e[1m" << yellow << "SM4-GCM Cihper" << "\e[0m" << reset << std::endl;
-				/*This portion of the code generate the password
-				length randomly using mersen twister*/
-				std::random_device rd_sm4; // seed the random number generator
-				std::mt19937 gen_sm4(rd_sm4()); // initialize the mersene twister
-
-				// define the distribution range between 16 to 64 include [16,64]
-				// this define the password length
-				std::uniform_int_distribution<int> distrib_sm4(16,64);
-			
-				int passLenSm4 = distrib_sm4(gen_sm4);
-
-				std::string password_sm4 = generatePassword(passLenSm4);
-				std::cout << "Generated Password >: " << password_sm4 << std::endl;
-				sm4filefolder(mode, filePath, password_sm4);
+				std::cout << "Generated Password >: " << password << std::endl;
+				sm4filefolder(mode, filePath, password);
 				std::cout << "\e[1m" << yellow << "Encrypted" << "\e[0m" << reset << "\n\n";
 			}
 			else if(cipher_selection==2) { // XChaCha20Poly1305
 			
 				std::cout << "\n" << "\e[1m" << yellow << "XChaCha20Poly1305 Cihper" << "\e[0m" << reset << std::endl;
-				/*This portion of the code generate the password
-				length randomly using mersen twister*/
-				std::random_device rd_xchacha; // seed the random number generator
-				std::mt19937 gen_xchacha(rd_xchacha()); // initialize the mersene twister
-
-				// define the distribution range between 16 to 64 include [16,64]
-				// this define the password length
-				std::uniform_int_distribution<int> distrib_xchacha(16,64);
-			
-				int passLenXchacha = distrib_xchacha(gen_xchacha);
-
-				std::string password_xchacha = generatePassword(passLenXchacha);
-				std::cout << "Generated Password >: " << password_xchacha << std::endl;
-				xchacha20filefolder(mode, filePath, password_xchacha);
+				std::cout << "Generated Password >: " << password << std::endl;
+				xchacha20filefolder(mode, filePath, password);
 				std::cout << "\e[1m" << yellow << "Encrypted" << "\e[0m" << reset << "\n\n";
 			}
 			// default
 			else {
-				std::cout << "\e[1m" << yellow << "Unknown Choice" << "\e[0m" << reset << std::endl;
+				std::cout << "\e[1m" << yellow << "Unknown Encryption Choice" << "\e[0m" << reset << std::endl;
 				goto label_1_file_path; // repeat the process until a valid is input
 			}
 		}
@@ -112,7 +93,7 @@ int main(/*int argc, char **argv*/) {
 	}
 	// decryption
 	else if(mode=="d" || mode=="decrypt") {
-		std::cout << "\e[1m" << "Decryption mode" << "\e[0m" << std::endl;
+		std::cout << "\e[1mEnrolling Decryption Mode\e[0m" << std::endl;
 		
 		label_2_file_path:
 			std::cout << "File absolute path >: ";
