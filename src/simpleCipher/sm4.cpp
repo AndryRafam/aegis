@@ -20,7 +20,7 @@ bool sm4filefolder(std::string mode, std::string filePath, std::string password)
         HKDF<SHA256> hkdf; // hash key derivation function based on hmac
 
         // Setup key and Initialization Vector (IV)
-        SecByteBlock key(SM4::DEFAULT_KEYLENGTH); // 32 bytes (96 bits)
+        SecByteBlock key(SM4::DEFAULT_KEYLENGTH); // 32 bytes (128 bits)
         prng.GenerateBlock(key, key.size());
         SecByteBlock iv(12); // 12 bytes (96 bits)
         prng.GenerateBlock(iv, iv.size());
