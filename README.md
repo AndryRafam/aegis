@@ -2,11 +2,11 @@
 [![Debian](https://img.shields.io/badge/Debian-A81D33?logo=debian&logoColor=fff)](#)
 [![Fedora](https://img.shields.io/badge/Fedora-51A2DA?logo=fedora&logoColor=fff)](#)
 
-<h1 align="left"> NeptuneCrypt </h1>
+<h1 align="left"> PoseidonCrypt </h1>
 
 <h2 algin="left"> About </h2>
 
-NeptuneCrypt is a lightweight CLI encryption software using XChaCha20Poly1305, SM4-GCM and Aes-256-GCM (will be added soon) as cipher for simple encryption and SHA256 as hash key derivation function. The software was built with C++ (std=23) and CryptoPP: https://github.com/weidai11/cryptopp
+PoseidonCrypt (formerly NeptuneCrypt) is a lightweight CLI encryption software using XChaCha20Poly1305, SM4-GCM and Aes-256-GCM (will be added soon) as cipher for simple encryption and SHA256 as hash key derivation function. The software was built with C++ (std=23) and CryptoPP: https://github.com/weidai11/cryptopp
 
 <h2 align="left"> About the cipher </h2>
 
@@ -24,19 +24,19 @@ NeptuneCrypt is a lightweight CLI encryption software using XChaCha20Poly1305, S
 
 <h2 align="left"> Build, install and run on Linux </h2>
   
-To build and install NeptuneCrypt on Linux, go to the directory NeptuneCrypt or NeptuneCrypt-main and type the following command in terminal (super user mode). The executable file will be installed at /usr/local/bin/ directory.
+To build and install PoseidonCrypt on Linux, go to the directory PoseidonCrypt or PoseidonCrypt-main and type the following command in terminal (super user mode). The executable file will be installed at /usr/local/bin/ directory.
 
 ```bash
 $ sudo make install
 ```
-To run NeptuneCrypt on Linux, type the following command anywhere in terminal
+To run PoseidonCrypt on Linux, type the following command anywhere in terminal
 
 ```bash
-$ neptune
+$ poseidon
 ```
 <h2 align="left"> How to uninstall and purge </h2>
 
-To uninstall and purge NeptuneCrypt, go to the directory NeptuneCrypt or NeptuneCrypt-main and type the following command in terminal (super user mode).
+To uninstall and purge PoseidonCrypt, go to the directory PoseidonCrypt or PoseidonCrypt-main and type the following command in terminal (super user mode).
 
 ```bash
 $ sudo make uninstall && sudo make clean
@@ -44,7 +44,7 @@ $ sudo make uninstall && sudo make clean
 
 <h2 align="left"> How to encrypt folders ? </h2>
 
-Encrypting file is straightforward. To encrypt folder, first compress/archive the folder (.7z, .zip, .rar, .tar etc.) and then encrypt with NeptuneCrypt.
+Encrypting file is straightforward. To encrypt folder, first compress/archive the folder (.7z, .zip, .rar, .tar etc.) and then encrypt with PoseidonCrypt.
 
 <h2 align="left"> Future upgrade </h2>
 
