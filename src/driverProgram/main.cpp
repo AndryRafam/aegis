@@ -15,8 +15,21 @@
 #define yellow "\x1B[33m"
 #define reset "\x1B[0m"
 
-// helper to safely get an existing path via user input
+// helper function to show about the program
+void about() {
+	std::cout << std::endl;
+	std::cout << "\e[1m";
+	std::cout << "=============================================================\n";
+	std::cout << " NeptuneCrypt Copyright © June 2026 Andry RAFAM ANDRIANJAFY.\n\n";
+	std::cout << " NeptuneCrypt is a free open-source encryption software.\n";
+	std::cout << " Password is randomly generated.\n\n";
+	std::cout << " This software comes with ABSOLUTELY NO WARRANTY.\n\n";
+	std::cout << " License: MIT\n";
+	std::cout << "=============================================================\n";
+	std::cout << "\e[0m";
+}
 
+// helper to safely get an existing path via user input
 std::string getValidFilePath() {
 	std::string filePath;
 	while(true) {
@@ -37,15 +50,9 @@ int main(/*int argc, char **argv*/) {
 	std::ios::sync_with_stdio(false);
 	
 	system("clear"); // clear the screen
-	
-	std::ifstream infile;
-	std::string line;
-	infile.open("about.txt");
-	while(std::getline(infile, line)) {
-		std::cout << "\e[1m" << line << "\e[0m" << std::endl;
-	}
-	infile.close();
-	
+
+	about();
+
 	// encryption or decryption
 	std::cout << std::endl;
 	std::cout << "encrypt/decrypt (e/d) ? >: ";
@@ -60,12 +67,12 @@ int main(/*int argc, char **argv*/) {
 		std::string filePath = getValidFilePath();
 
 		int cipher_selection = 0; // initialize selection
-		while(cipher_selection != 1 && cipher_selection != 2) {
+		while(cipher_selection != 1 && cipher_selection != 2 /*&& cipher_selection*/) {
 			std::cout << "\n\e[1mSelect cipher\e[0m\n1: SM4-GCM\n2: XChaCha20Poly1305\nChoice >: ";
 			std::cin >> cipher_selection;
 			std::cin.ignore();
 
-			if(cipher_selection !=1 && cipher_selection != 2) {
+			if(cipher_selection !=1 && cipher_selection != 2 /*&& cipher_selection !=3*/) {
 				std::cout << "\e[1m" << yellow << "Unknown Encryption Cipher" << "\e[0m" << reset << std::endl;
 			}
 		}
@@ -92,6 +99,13 @@ int main(/*int argc, char **argv*/) {
 			xchacha20filefolder(mode, filePath, password);
 			std::cout << "\e[1m" << yellow << "Encrypted Successfully" << "\e[0m" << reset << "\n\n";
 		}
+		/*else if(cipher_selection==3) { // Aes-256-GCM
+
+			std::cout << "\n" << "\e[1m" << yellow << "Aes256-gcm Cihper" << "\e[0m" << reset << std::endl;
+			std::cout << "Generated Password >: " << password << std::endl;
+			aesfilefolder(mode, filePath, password);
+			std::cout << "\e[1m" << yellow << "Encrypted Successfully" << "\e[0m" << reset << "\n\n"; 
+		}*/
 	}
 	
 	// decryption
@@ -111,6 +125,9 @@ int main(/*int argc, char **argv*/) {
 		else if(xchacha20filefolder(mode, filePath, password)) {
 			std::cout << "\e[1m" << yellow << "XChaCha20Poly1305 - Decrypted Successfully" << "\e[0m" << reset << "\n\n";
 		}
+		/*else if(aesfilefolder(mode, filePath, password)) {
+			std::cout << "\e[1m" << yellow << "Aes256-gcm - Decrypted Successfully" << "\e[0m" << reset << "\n\n";
+		}*/
 		// default
 		else {
 			std::cout << "\n" << "\e[1m" << "Cannot decrypt. Program terminated." << "\e[0m"  << "\n\n";
