@@ -15,6 +15,22 @@
 #define yellow "\x1B[33m"
 #define reset "\x1B[0m"
 
+// helper to safely get an existing path via user input
+
+std::string getValidFilePath() {
+	std::string filePath;
+	while(true) {
+		std::cout << "File absolute path >: ";
+		std::getline(std::cin, filePath);
+
+		if(std::filesystem::is_regular_file(filePath)) {
+			return filePath;
+		}
+		// if file doesn't exist repeat the process
+		std::cout << "\e[1m" << yellow << "File doesn't exist" << "\e[0m" << reset << std::endl;
+	}
+}
+
 // main function
 int main(/*int argc, char **argv*/) {
 		
@@ -41,92 +57,66 @@ int main(/*int argc, char **argv*/) {
 	if (mode=="e" || mode=="encrypt") {
 	
 		std::cout << "\e[1mEnrolling Encryption Mode\e[0m" << std::endl;
+		std::string filePath = getValidFilePath();
 
-		label_1_file_path:
-			std::cout << "File absolute path >: ";
-			std::string filePath;
-			std::getline(std::cin, filePath);
-			
-		// if file exist
-		// proceed for encryption
-		if(std::filesystem::exists(filePath)) {
+		int cipher_selection; // select between xchacha20 et sm4
+		std::cout << "\n\e[1mSelect cipher\e[0m\n1: SM4-GCM\n2: XChaCha20Poly1305\nChoice >: ";
+		std::cin >> cipher_selection;
+		std::cin.ignore();
 
-			int cipher_selection; // select between xchacha20 et sm4
-			std::cout << "\n\e[1mSelect cipher\e[0m\n1: SM4-GCM\n2: XChaCha20Poly1305\nChoice >: ";
-			std::cin >> cipher_selection;
-			std::cin.ignore();
+		/*Initialize random number [16,64] length
+		using mersene twister*/
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		std::uniform_int_distribution<int> distrib(16,64);
+		int passLen = distrib(gen);
+		std::string password = generatePassword(passLen);
 
-			/*Initialize random number [16,64] length
-			using mersene twister*/
-			std::random_device rd;
-			std::mt19937 gen(rd());
-			std::uniform_int_distribution<int> distrib(16,64);
-			int passLen = distrib(gen);
-			std::string password = generatePassword(passLen);
-
-			if(cipher_selection==1) { // SM4-GCM
+		if(cipher_selection==1) { // SM4-GCM
 				
-				std::cout << "\n" << "\e[1m" << yellow << "SM4-GCM Cihper" << "\e[0m" << reset << std::endl;
-				std::cout << "Generated Password >: " << password << std::endl;
-				sm4filefolder(mode, filePath, password);
-				std::cout << "\e[1m" << yellow << "Encrypted" << "\e[0m" << reset << "\n\n";
-			}
-			else if(cipher_selection==2) { // XChaCha20Poly1305
-			
-				std::cout << "\n" << "\e[1m" << yellow << "XChaCha20Poly1305 Cihper" << "\e[0m" << reset << std::endl;
-				std::cout << "Generated Password >: " << password << std::endl;
-				xchacha20filefolder(mode, filePath, password);
-				std::cout << "\e[1m" << yellow << "Encrypted" << "\e[0m" << reset << "\n\n";
-			}
-			// default
-			else {
-				std::cout << "\e[1m" << yellow << "Unknown Encryption Choice" << "\e[0m" << reset << std::endl;
-				goto label_1_file_path; // repeat the process until a valid is input
-			}
+			std::cout << "\n" << "\e[1m" << yellow << "SM4-GCM Cihper" << "\e[0m" << reset << std::endl;
+			std::cout << "Generated Password >: " << password << std::endl;
+			sm4filefolder(mode, filePath, password);
+			std::cout << "\e[1m" << yellow << "Encrypted Successfully" << "\e[0m" << reset << "\n\n";
 		}
-
-		// if file doesn't exist repeat the process
+		else if(cipher_selection==2) { // XChaCha20Poly1305
+			
+			std::cout << "\n" << "\e[1m" << yellow << "XChaCha20Poly1305 Cihper" << "\e[0m" << reset << std::endl;
+			std::cout << "Generated Password >: " << password << std::endl;
+			xchacha20filefolder(mode, filePath, password);
+			std::cout << "\e[1m" << yellow << "Encrypted Successfully" << "\e[0m" << reset << "\n\n";
+		}
+		// default
 		else {
-			std::cout << "\e[1m" << yellow << "File doesn't exist" << "\e[0m" << reset << std::endl;
-			goto label_1_file_path; // repeat the process until a valid is input
+			std::cout << "\e[1m" << yellow << "Unknown Encryption Cipher" << "\e[0m" << reset << std::endl;
+			return 0;
 		}
 	}
+	
 	// decryption
 	else if(mode=="d" || mode=="decrypt") {
 		std::cout << "\e[1mEnrolling Decryption Mode\e[0m" << std::endl;
+		std::string filePath = getValidFilePath();
 		
-		label_2_file_path:
-			std::cout << "File absolute path >: ";
-			std::string filePath;
-			std::getline(std::cin, filePath);
-			
-		// if file exist,
-		// proceed for decryption
-		if(std::filesystem::exists(filePath)) {
-			std::string password;
-			std::cout << "Enter your password >: ";
-			setEcho(false); // disable mirroring input to the screen
-			std::getline(std::cin, password); // password will not be outputed for security reason
-			setEcho(true); //
-			std::cout << std::endl;
-			if(sm4filefolder(mode, filePath, password)) {
-				std::cout << "\e[1m" << yellow << "SM4-GCM - Decrypted" << "\e[0m" << reset << "\n\n";
-			}
-			else if(xchacha20filefolder(mode, filePath, password)) {
-				std::cout << "\e[1m" << yellow << "XChaCha20Poly1305 - Decrypted" << "\e[0m" << reset << "\n\n";
-			}
-			// default
-			else {
-				std::cout << "\n" << "\e[1m" << "Cannot decrypt. Program terminated." << "\e[0m"  << "\n\n";
-				return 0;
-			}
+		std::string password;
+		std::cout << "Enter your password >: ";
+		setEcho(false); // disable mirroring input to the screen
+		std::getline(std::cin, password); // password will not be outputed for security reason
+		setEcho(true); //
+		std::cout << std::endl;
+		if(sm4filefolder(mode, filePath, password)) {
+			std::cout << "\e[1m" << yellow << "SM4-GCM - Decrypted Successfully" << "\e[0m" << reset << "\n\n";
 		}
-		// if file doesn't exist repeat the process
+		else if(xchacha20filefolder(mode, filePath, password)) {
+			std::cout << "\e[1m" << yellow << "XChaCha20Poly1305 - Decrypted Successfully" << "\e[0m" << reset << "\n\n";
+		}
+		// default
 		else {
-			std::cout << "\e[1m" << yellow << "File doesn't exist" << "\e[0m" << reset << std::endl;
-			goto label_2_file_path; // repeat the process until a valid is input
+			std::cout << "\n" << "\e[1m" << "Cannot decrypt. Program terminated." << "\e[0m"  << "\n\n";
+			return 0;
 		}
 	}
+	
 	// default
 	else {
 		std::cout << "\e[1m" << "Invalid choice. Program terminated." << "\e[0m" << "\n\n";
