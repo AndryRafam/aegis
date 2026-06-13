@@ -34,17 +34,12 @@ To run NeptuneCrypt on Linux, type the following command anywhere in terminal
 ```bash
 $ neptune
 ```
-<h2 align="left"> How to uninstall and clean </h2>
+<h2 align="left"> How to uninstall and purge </h2>
 
-To uninstall NeptuneCrypt, go to the directory NeptuneCrypt or NeptuneCrypt-main and type the following command in terminal (super user mode).
-
-```bash
-$ sudo make uninstall
-```
-This will remove the executable files. To clean (removing all dependencies and objects), run the following command in terminal inside the directory NeptuneCrypt or NeptuneCrypt-main.
+To uninstall and purge NeptuneCrypt, go to the directory NeptuneCrypt or NeptuneCrypt-main and type the following command in terminal (super user mode).
 
 ```bash
-$ make clean
+$ sudo make uninstall && sudo make clean
 ```
 
 <h2 align="left"> How to encrypt folders ? </h2>
