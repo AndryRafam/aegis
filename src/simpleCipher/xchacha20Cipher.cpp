@@ -77,9 +77,8 @@ bool xchacha20filefolder(std::string mode, std::string filePath, std::string pas
 	
 	catch(Exception& ex) {
 		std::cout << std::endl;
-		std::cout << ex.what() << std::endl;
-		std::cout << "\e[1m" << "Decryption failed" << "\e[0m" << std::endl;
-		std::cout << "\e[1m" << yellow << "Verify your password. Try again." << "\e[0m" << reset << "\n\n";
+		std::cout << "\e[1m" << "Attempting to decrypt XChaCha20Poly1305" << "\e[0m" << "\n";
+		std::cout << "\e[1m" << ex.what() << "\e[0m" << "\n";
 		
 		// remove the temporary file even decryption failed.
 		std::remove(tempfile.c_str());
