@@ -13,9 +13,12 @@ LDFLAGS = -lcryptopp
 neptune: $(obj)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
+run: neptune
+	./neptune
+
 -include $(deps)
 
-.PHONY: clean
+.PHONY: clean run
 clean:
 	rm -f $(obj) $(deps) neptune
 
