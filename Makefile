@@ -1,3 +1,6 @@
+# To Install: sudo make install
+# To Uninstall: sudo make uninstall
+
 ccsrc = $(wildcard src/simpleCipher/*.cpp) \
 		$(wildcard src/password/*.cpp) \
 		$(wildcard src/driverProgram/*.cpp)
@@ -13,13 +16,19 @@ LDFLAGS = -lcryptopp
 neptune: $(obj)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
-# Build and execute the program automatically
-run: neptune
-	./neptune
+
+# install
+install: neptune
+	mkdir -p /usr/local/bin
+		cp -f neptune /usr/local/bin/neptune
+		
+# uninstall
+uninstall: neptune
+	rm -f /usr/local/bin/neptune
 
 -include $(deps)
 
-.PHONY: clean run
+.PHONY: clean install uninstall
 clean:
 	rm -f $(obj) $(deps) neptune
 
