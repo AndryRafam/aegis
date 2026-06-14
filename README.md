@@ -37,7 +37,7 @@ $ neptune
 <h2 align="left"> How to purge </h2>
 
 To purge NeptuneCrypt, go to the directory containing all the codes (for exemple: NeptuneCrypt-main if you downloaded from github repo) and type the following command in terminal (super user mode).
-This will remove the binary file neptune and all dependencies.
+This command will remove the binary file neptune and all dependencies.
 
 ```bash
 $ sudo make purge
