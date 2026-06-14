@@ -1,6 +1,10 @@
 # To Install: sudo make install
 # To purge: sudo make purge
 
+ifneq ($(shell id -u), 0)
+$(error super user (sudo) mode only)
+endif
+
 ccsrc = $(wildcard src/simpleCipher/*.cpp) \
 		$(wildcard src/password/*.cpp) \
 		$(wildcard src/driverProgram/*.cpp)
