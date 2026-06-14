@@ -24,7 +24,7 @@ NeptuneCrypt is a lightweight CLI encryption software using XChaCha20Poly1305, S
 
 <h2 align="left"> Build, install and run on Linux </h2>
   
-To build and install NeptuneCrypt on Linux, go to the directory NeptuneCrypt or NeptuneCrypt-main and type the following command in terminal (super user mode). The executable file will be installed at /usr/local/bin/ directory.
+To build and install NeptuneCrypt on Linux, go to the directory containing all the codes (for exemple: NeptuneCrypt-main if you downloaded from github repo) and type the following command in terminal (super user mode). The executable file will be installed at /usr/local/bin/ directory.
 
 ```bash
 $ sudo make install
@@ -32,14 +32,14 @@ $ sudo make install
 To run NeptuneCrypt on Linux, type the following command anywhere in terminal
 
 ```bash
-$ Neptune
+$ neptune
 ```
-<h2 align="left"> How to uninstall and purge </h2>
+<h2 align="left"> How to purge </h2>
 
-To uninstall and purge NeptuneCrypt, go to the directory NeptuneCrypt or NeptuneCrypt-main and type the following command in terminal (super user mode).
+To purge NeptuneCrypt, go to the directory containing all the codes (for exemple: NeptuneCrypt-main if you downloaded from github repo) and type the following command in terminal (super user mode).
 
 ```bash
-$ sudo make uninstall && sudo make clean
+$ sudo make purge
 ```
 
 <h2 align="left"> How to encrypt folders ? </h2>
