@@ -19,15 +19,17 @@
 // helper function to show about the program
 void about() {
 	std::cout << std::endl;
-	std::cout << "\e[1m";
-	std::cout << "=============================================================\n";
-	std::cout << " NeptuneCrypt Copyright © June 2026 Andry RAFAM ANDRIANJAFY.\n\n";
-	std::cout << " NeptuneCrypt is a free open-source encryption software.\n";
-	std::cout << " Password is randomly generated.\n\n";
-	std::cout << " This software comes with ABSOLUTELY NO WARRANTY.\n\n";
-	std::cout << " License: MIT\n";
-	std::cout << "=============================================================\n";
-	std::cout << "\e[0m";
+	const std::string aboutText = R"(
+  =============================================================
+   NeptuneCrypt Copyright © June 2026 Andry RAFAM ANDRIANJAFY.
+   Password is randomly generated.
+	 
+   This software comes with ABSOLUTELY NO WARRANTY.
+	 
+   License: MIT
+  =============================================================
+	)";
+	std::cout << "\e[1m" << aboutText << "\e[0m"; 
 }
 
 // helper to safely get an existing path via user input
