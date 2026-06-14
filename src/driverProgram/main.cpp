@@ -49,11 +49,11 @@ int main(/*int argc, char **argv*/) {
 		
 	std::ios::sync_with_stdio(false);
 	
-	system("clear"); // clear the screen
+	std::cout << "\033[H\033[J"; // clear the screen
 	about();
 	
 	label_mode:
-		// encryption or decryption or quit
+		// encryption or decryption
 		std::cout << "encrypt/decrypt (e/d) ? >: ";
 		std::string mode;
 		std::cin >> mode;
