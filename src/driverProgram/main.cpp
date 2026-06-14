@@ -90,14 +90,14 @@ int main(/*int argc, char **argv*/) {
 
 		if(cipher_selection==1) { // SM4-GCM
 				
-			std::cout << "\n" << "\e[1m" << yellow << "SM4-GCM Cihper" << "\e[0m" << reset << std::endl;
+			std::cout << "\n" << "\e[1m" << yellow << "SM4-GCM Cipher" << "\e[0m" << reset << std::endl;
 			std::cout << "Generated Password >: " << password << std::endl;
 			sm4filefolder(mode, filePath, password);
 			std::cout << "\e[1m" << yellow << "Encrypted Successfully" << "\e[0m" << reset << "\n\n";
 		}
 		else if(cipher_selection==2) { // XChaCha20Poly1305
 			
-			std::cout << "\n" << "\e[1m" << yellow << "XChaCha20Poly1305 Cihper" << "\e[0m" << reset << std::endl;
+			std::cout << "\n" << "\e[1m" << yellow << "XChaCha20Poly1305 Cipher" << "\e[0m" << reset << std::endl;
 			std::cout << "Generated Password >: " << password << std::endl;
 			xchacha20filefolder(mode, filePath, password);
 			std::cout << "\e[1m" << yellow << "Encrypted Successfully" << "\e[0m" << reset << "\n\n";
@@ -119,7 +119,7 @@ int main(/*int argc, char **argv*/) {
 		std::string password;
 		std::cout << "Enter your password >: ";
 		setEcho(false); // disable mirroring input to the screen
-		std::getline(std::cin, password); // password will not be outputed for security reason
+		std::getline(std::cin, password); // password will not be displayed for security reason
 		setEcho(true); //
 		std::cout << std::endl;
 		if(sm4filefolder(mode, filePath, password)) {
