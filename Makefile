@@ -1,8 +1,14 @@
-# To Install: sudo make install
-# To purge: sudo make purge
+# 1. Detect the Operating System
+OS := $(shell uname -s)
 
+# 2. Linux-only rule
+ifneq ($(OS), Linux)
+	$(error ERROR: This program is strictly for Linux OS). Compilation aborted.
+endif
+
+# 3. Super user only rule
 ifneq ($(shell id -u), 0)
-$(error super user (sudo) mode only)
+	$(error super user (sudo) mode only)
 endif
 
 ccsrc = $(wildcard src/simpleCipher/*.cpp) \
