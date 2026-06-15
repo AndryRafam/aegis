@@ -8,7 +8,7 @@
 
 NeptuneCrypt is a lightweight CLI encryption software using XChaCha20Poly1305, SM4-GCM and Aes-256-GCM as cipher for simple encryption and SHA256 as hash key derivation function. The software was built with C++ (std=23) and CryptoPP: https://github.com/weidai11/cryptopp
 
-![Neptune_Crypt](output/demo_v1.0.3.gif)
+![Neptune_Crypt](output/output_v1.0.3.gif)
 
 <h2 align="left"> About the cipher </h2>
 
