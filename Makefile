@@ -11,6 +11,8 @@ ifneq ($(shell id -u), 0)
 $(error ERROR: You must run 'sudo make' to build this project.)
 endif
 
+.DEFAULT_GOAL := install
+
 ccsrc = $(wildcard src/simpleCipher/*.cpp) \
 		$(wildcard src/password/*.cpp) \
 		$(wildcard src/driverProgram/*.cpp)
