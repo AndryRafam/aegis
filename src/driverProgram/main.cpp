@@ -1,5 +1,3 @@
-/* THIS PART OF THE PROGRAM WILL BE MODIFIED WITH FUTRE UPGRADE*/
-
 #include <iostream>
 #include <string>
 #include <filesystem>
@@ -9,7 +7,7 @@
 
 #include "../simpleCipher/xchacha20Cipher.hpp"
 #include "../simpleCipher/sm4.hpp"
-//#include "../simpleCipher/aes.hpp"
+#include "../simpleCipher/aes.hpp"
 #include "../password/password_generator.hpp"
 #include "../password/set_echo.hpp"
 
@@ -18,7 +16,7 @@
 
 // helper function to show about the program
 void about() {
-	const std::string aboutText = R"(NeptuneCrypt, CLI Encryption Software, June 2026
+	const std::string aboutText = R"(NeptuneCrypt-v1.0.3, Encryption Software, June 2026
 Andry RAFAM ANDRIANJAFY <andryrafam@protonmail.com>
 https://github.com/andryrafam
 
@@ -66,12 +64,12 @@ int main(/*int argc, char **argv*/) {
 		std::string filePath = getValidFilePath();
 
 		int cipher_selection = 0; // initialize selection
-		while(cipher_selection != 1 && cipher_selection != 2 /*&& cipher_selection != 3*/) {
-			std::cout << "\n\e[1mSelect cipher\e[0m\n1: SM4-GCM\n2: XChaCha20Poly1305\nChoice >: ";
+		while(cipher_selection != 1 && cipher_selection != 2 && cipher_selection != 3) {
+			std::cout << "\n\e[1mSelect cipher\e[0m\n1: SM4-GCM\n2: XChaCha20Poly1305\n3: Aes256-GCM\nChoice >: ";
 			std::cin >> cipher_selection;
 			std::cin.ignore();
 
-			if(cipher_selection !=1 && cipher_selection != 2 /*&& cipher_selection !=3*/) {
+			if(cipher_selection !=1 && cipher_selection != 2 && cipher_selection !=3) {
 				std::cout << "\e[1m" << yellow << "Unknown Encryption Cipher" << "\e[0m" << reset << std::endl;
 			}
 		}
@@ -98,13 +96,13 @@ int main(/*int argc, char **argv*/) {
 			xchacha20filefolder(mode, filePath, password);
 			std::cout << "\e[1m" << yellow << "Encrypted Successfully" << "\e[0m" << reset << "\n\n";
 		}
-		/*else if(cipher_selection==3) { // Aes256-GCM
+		else if(cipher_selection==3) { // Aes256-GCM
 
 			std::cout << "\n" << "\e[1m" << yellow << "Aes256-GCM Cihper" << "\e[0m" << reset << std::endl;
 			std::cout << "Generated Password >: " << password << std::endl;
 			aesfilefolder(mode, filePath, password);
 			std::cout << "\e[1m" << yellow << "Encrypted Successfully" << "\e[0m" << reset << "\n\n"; 
-		}*/
+		}
 	}
 	
 	// decryption
@@ -124,9 +122,9 @@ int main(/*int argc, char **argv*/) {
 		else if(xchacha20filefolder(mode, filePath, password)) {
 			std::cout << "\n\e[1m" << yellow << "XChaCha20Poly1305 - Decrypted Successfully" << "\e[0m" << reset << "\n\n";
 		}
-		/*else if(aesfilefolder(mode, filePath, password)) {
+		else if(aesfilefolder(mode, filePath, password)) {
 			std::cout << "\n\e[1m" << yellow << "Aes256-GCM - Decrypted Successfully" << "\e[0m" << reset << "\n\n";
-		}*/
+		}
 		// default
 		else {
 			std::cout << "\n\e[1m" << "Cannot decrypt. Program terminated." << "\e[0m"  << "\n\n";
