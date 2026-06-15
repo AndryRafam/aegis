@@ -49,10 +49,6 @@ $ sudo make purge
 
 Encrypting file is straightforward. To encrypt folder, first compress/archive the folder (.7z, .zip, .rar, .tar etc.) and then encrypt with NeptuneCrypt.
 
-<h2 align="left"> Future upgrade </h2>
-
-- Adding Aes256-gcm as third cipher.
-
 <h2 align="left"> WARNING </h2>
 
 NEPTUNE-CRYPT IS A FREE SOFTWARE AND COMES WITH ABSOLUTELY NO WARRANTY.
