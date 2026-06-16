@@ -32,7 +32,7 @@ bool sm4filefolder(std::string mode, std::string filePath, std::string password)
             (const byte*)salt.data(), salt.size(), NULL, 0);
 
         // encryption
-        if(mode=="encrypt" || mode=="e") {
+        if(mode=="encrypt") {
 
             // encryption object
             GCM<SM4>::Encryption sm4_enc;
@@ -74,8 +74,8 @@ bool sm4filefolder(std::string mode, std::string filePath, std::string password)
 
     catch(Exception& ex) {
         std::cout << std::endl;
-        std::cout << "\e[1m" << "Attempting to decrypt SM4-GCM" << "\e[0m" << "\n";
-		std::cout << "\e[1m" << ex.what() << "\e[0m" << "\n";
+        std::cout << "Attempting to decrypt SM4-GCM" << "\n";
+		std::cout << ex.what() << "\n";
 
         // remove the tempfile even if decryption failed
         std::remove(tempfile.c_str());
