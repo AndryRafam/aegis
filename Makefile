@@ -15,7 +15,7 @@ endif
 
 ccsrc = $(wildcard src/simpleCipher/*.cpp) \
 		$(wildcard src/password/*.cpp) \
-		$(wildcard src/driverProgram/*.cpp)
+		$(wildcard src/driverProgram/*.cpp) 
 		
 CXX = g++
 CXXFLAGS = -Wall -Wextra -std=c++23 -MMD -MP
