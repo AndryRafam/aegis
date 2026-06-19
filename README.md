@@ -4,6 +4,8 @@
 
 <h1 align="left"> NeptuneCrypt </h1>
 
+<h4 align="left"> Starting from v1.4, all future upgrade will be also available on Gitlab: </h4> https://gitlab.com/AndryRafam/neptunecrypt
+
 ![](output/demo.gif)
 
 <h2 algin="left"> About </h2>
