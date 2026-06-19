@@ -1,4 +1,5 @@
 #include <iostream>
+#include <thread>
 
 #include "sm4.hpp"
 
@@ -6,75 +7,120 @@ using namespace CryptoPP;
 
 bool sm4filefolder(std::string mode, std::string filePath, std::string password) {
 
+    // since Argon2id is multithreading
+	// check the number of threads
+	unsigned int threads = std::thread::hardware_concurrency();
+
     // temporary file to avoid
     // data loss
     std::string tempfile = filePath+".tmp";
     std::string tempfile_hex = filePath+".tmphex";
 
+    const int IV_SIZE = 12; // iv size
+    const int TAG_SIZE = 16; // standard 128-bit authentication tag
+    const int SALT_SIZE = 16; // Argon2 recommends at least 16 bytes
+
     try {
+
+        AutoSeededRandomPool rng;
         
-        std::string salt(""); // null salt string
-
-        AutoSeededRandomPool prng;
-        HKDF<SHA256> hkdf; // hash key derivation function based on hmac
-
-        // Setup key and Initialization Vector (IV)
-        SecByteBlock key(SM4::DEFAULT_KEYLENGTH); // 16 bytes (128 bits)
-        prng.GenerateBlock(key, key.size());
-        SecByteBlock iv(12); // 12 bytes (96 bits)
-        prng.GenerateBlock(iv, iv.size());
-
-        const int TAG_SIZE = 16; // mac size
-
-        hkdf.DeriveKey(key, key.size(), (const byte*)password.data(), password.size(),
-            (const byte*)salt.data(), salt.size(), NULL, 0);
-        hkdf.DeriveKey(iv, iv.size(), (const byte*)password.data(), password.size(),
-            (const byte*)salt.data(), salt.size(), NULL, 0);
-
-        // encryption
+        /*ENCRYPTION MODE*/
         if(mode=="encrypt") {
+        
+            // Setup key, IV and unique random salt
+            SecByteBlock key(SM4::DEFAULT_KEYLENGTH); // 16 bytes (128 bits)
+            rng.GenerateBlock(key, key.size());
+            
+            SecByteBlock iv(IV_SIZE); // 12 bytes (96 bits)
+            rng.GenerateBlock(iv, iv.size());
 
-            // encryption object
-            GCM<SM4>::Encryption sm4_enc;
-            sm4_enc.SetKeyWithIV(key, key.size(), iv, iv.size());
-            FileSource(filePath.c_str(), true, new AuthenticatedEncryptionFilter(sm4_enc, new FileSink(tempfile.c_str()), false, TAG_SIZE));
+            SecByteBlock salt(SALT_SIZE);
+            rng.GenerateBlock(salt, salt.size());
 
+            // derive key using Argon2id
+            Argon2 argon2(Argon2::ARGON2ID);
+            argon2.DeriveKey(key, key.size(),
+                (const byte*)password.data(), password.size(),
+                salt.data(), salt.size(),
+                3, // time cost (iterations)
+                65536, // memory cost (64 MB)
+                threads // number of threads
+            );
+            
+            // write Salt + IV + Ciphertext into a temporary binary file
+            {
+                FileSink binarySink(tempfile.c_str());
+                binarySink.Put(salt, salt.size());
+                binarySink.Put(iv, iv.size());
+
+                GCM<SM4>::Encryption sm4_enc;
+                sm4_enc.SetKeyWithIV(key, key.size(), iv, iv.size());
+
+                // stream the file payload right after the header data
+                FileSource(filePath.c_str(), true,
+                    new AuthenticatedEncryptionFilter(sm4_enc, new Redirector(binarySink), false, TAG_SIZE)
+                );
+            }
+            
             // hexadecimal encoding
             // for pretty looking
             FileSource(tempfile.c_str(), true, new HexEncoder(new FileSink(tempfile_hex.c_str())));
 
-            // remove non needed file
+            // cleanup and swap files
             std::remove(filePath.c_str());
             std::remove(tempfile.c_str());
-            // rename the hex tempfile
             std::rename(tempfile_hex.c_str(), filePath.c_str());
 
             return true;
         }
-        // decryption
+        /*DECRYPTION MODE*/
         else {
 
             // hexadecimal decoding
             FileSource(filePath.c_str(), true, new HexDecoder(new FileSink(tempfile_hex.c_str())));
 
+            // extract salt and IV out of the decoded temporary file
+            std::ifstream in(tempfile_hex.c_str(), std::ios::binary);
+
+            SecByteBlock salt(SALT_SIZE);
+            in.read((char*)salt.data(), salt.size());
+            if (in.gcount() != SALT_SIZE) throw std::runtime_error("File truncated: Missing salt.");
+
+            SecByteBlock iv(IV_SIZE);
+            in.read((char*)iv.data(), iv.size());
+            if (in.gcount() != IV_SIZE) throw std::runtime_error("File truncated: Missing IV.");
+
+            // re derive the exact key using the extracted salt
+            SecByteBlock key(SM4::DEFAULT_KEYLENGTH);
+            Argon2 argon2(Argon2::ARGON2ID);
+            argon2.DeriveKey(
+                key, key.size(),
+                (const byte*)password.data(), password.size(),
+                salt, salt.size(),
+                3, 65536, threads // must exactly match encryption parameters
+            );
+
             // decryption object
             GCM<SM4>::Decryption sm4_dec;
             sm4_dec.SetKeyWithIV(key, key.size(), iv, iv.size());
+            
             AuthenticatedDecryptionFilter df(sm4_dec, new FileSink(tempfile.c_str()));
-            FileSource(tempfile_hex.c_str(), true, new Redirector(df));
+            FileSource(in, true, new Redirector(df));
 
             if(true==df.GetLastResult()) {
+                in.close(); // release file handle before deleting
                 std::remove(filePath.c_str());
                 std::remove(tempfile_hex.c_str());
                 std::rename(tempfile.c_str(), filePath.c_str());
+                return true;
+            } else {
+                throw::std::runtime_error("\nAuthentication failed. Wrong password or corrupted data.\n");
             }
-            return true;
         }
     }
 
     catch(Exception& ex) {
-        std::cout << std::endl;
-        std::cout << "Attempting to decrypt SM4-GCM" << "\n";
+        std::cout << "\nError encountered during SM4-GCM processing:\n";
 		std::cout << ex.what() << "\n";
 
         // remove the tempfile even if decryption failed
