@@ -140,7 +140,7 @@ int main(/*int argc, char **argv*/) {
 
 	std::cout << "\033[?25h"; // restore cursor
 
-	// if the user choice is "Quit", exit the program immediately
+	// if the user choice is "Exit", exit the program immediately
 	if(select_mode==2) {
 		std::cout << "\033[H\033[J"; // clear the screen
 		about();
