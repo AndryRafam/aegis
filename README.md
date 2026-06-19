@@ -4,6 +4,8 @@
 
 <h1 align="left"> NeptuneCrypt </h1>
 
+![Neptune_Crypt](output/demo_v1.4.gif)
+
 <h2 algin="left"> About </h2>
 
 NeptuneCrypt is a lightweight CLI encryption software using XChaCha20Poly1305, SM4-GCM and Aes-256-GCM as cipher for simple encryption and Argon2id for encryption key derivation from passwords.
