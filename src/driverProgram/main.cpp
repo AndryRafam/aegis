@@ -17,7 +17,7 @@
 
 // helper function to show about the program
 void about() {
-	const std::string aboutText = R"(NeptuneCrypt-v1.4, Encryption Software, June 2026
+	const std::string aboutText = R"(NeptuneCrypt-v1.5, Encryption Software, June 2026
 Andry RAFAM ANDRIANJAFY <andryrafam@protonmail.com>
 https://github.com/andryrafam
 
@@ -197,7 +197,7 @@ int main(/*int argc, char **argv*/) {
 						selection = (selection==0) ? 2 : selection-1;
 						break;
 					case 'B': // down arrow
-						selection = (selection==2) ? 0 : selection + 1; 
+						selection = (selection==2) ? 0 : selection+1; 
 						break;
 				}
 			} else if(ch==10) {
@@ -228,7 +228,8 @@ int main(/*int argc, char **argv*/) {
 			cipher_name = "Aes256-GCM";
 		}
 
-		if(selection==0) { // SM4-GCM
+		// SM4-GCM
+		if(selection==0) { 
 			
 			std::cout << "\033[H\033[J"; // clear the screen
 			about();
@@ -245,7 +246,9 @@ int main(/*int argc, char **argv*/) {
 				return 0;
 			}
 		}
-		else if(selection==1) { // XChaCha20Poly1305
+
+		// XChaCha20Poly1305
+		else if(selection==1) { 
 			
 			std::cout << "\033[H\033[J"; // clear the screen
 			about();
@@ -262,7 +265,9 @@ int main(/*int argc, char **argv*/) {
 				return 0;
 			}
 		}
-		else if(selection==2) { // Aes256-GCM
+
+		// Aes256-GCM
+		else if(selection==2) { 
 
 			std::cout << "\033[H\033[J"; // clear the screen
 			about();
@@ -288,6 +293,15 @@ int main(/*int argc, char **argv*/) {
 		about();
 		std::cout << "\e[1mEnrolling Decryption Mode\e[0m" << std::endl;
 		std::string filePath = getValidFilePath();
+
+		std::ifstream file(filePath);
+		
+		// read the 2 first characters of the file
+		char header[2];
+		file.read(header, 2);
+		file.close();
+
+		std::string cipherID(header, 2);
 		
 		std::string password;
 		std::cout << "Enter Password >: ";
@@ -295,52 +309,78 @@ int main(/*int argc, char **argv*/) {
 		std::getline(std::cin, password); // password will not be displayed for security reason
 		setEcho(true); //
 		std::cout << std::endl;
-		if(sm4filefolder(mode, filePath, password)) {
-			std::cout << "\n\e[1m" << "SM4-GCM Decrypted Successfully" << "\e[0m" << "\n\n";
 
-			if(askToContinue()) goto main_menu;
-			else {
-				std::cout << "\033[H\033[J"; // clear the screen
-				about();
-				std::cout << "Program Terminated.\n\n";
-				return 0;
+		// auto select decrypt function based on ID detected
+		if(cipherID=="01") { // SM4-GCM
+			if(sm4filefolder(mode, filePath, password)) {
+				std::cout << "\n\e[1m" << "Decrypted Successfully" << "\e[0m" << "\n\n";
+
+				if(askToContinue()) goto main_menu;
+				else {
+					std::cout << "\033[H\033[J"; // clear the screen
+					about();
+					std::cout << "Program Terminated.\n\n";
+					return 0;
+				}
+			} else {
+				if(askToContinue()) goto main_menu;
+				else {
+					std::cout << "\033[H\033[J"; // clear the screen
+					about();
+					std::cout << "Program Terminated.\n\n";
+					return 0;
+				}
 			}
 		}
-		else if(xchacha20filefolder(mode, filePath, password)) {
-			std::cout << "\n\e[1m" << "XChaCha20Poly1305 Decrypted Successfully" << "\e[0m" << "\n\n";
+		else if(cipherID=="02") { // XChaCha20Poly1305
+			if(xchacha20filefolder(mode, filePath, password)) {
+				std::cout << "\n\e[1m" << "Decrypted Successfully" << "\e[0m" << "\n\n";
 
-			if(askToContinue()) goto main_menu;
-			else {
-				std::cout << "\033[H\033[J"; // clear the screen
-				about();
-				std::cout << "Program Terminated.\n\n";
-				return 0;
+				if(askToContinue()) goto main_menu;
+				else {
+					std::cout << "\033[H\033[J"; // clear the screen
+					about();
+					std::cout << "Program Terminated.\n\n";
+					return 0;
+				}
+			} else {
+				if(askToContinue()) goto main_menu;
+				else {
+					std::cout << "\033[H\033[J"; // clear the screen
+					about();
+					std::cout << "Program Terminated.\n\n";
+					return 0;
+				}
 			}
 		}
-		else if(aesfilefolder(mode, filePath, password)) {
-			std::cout << "\n\e[1m" << "Aes256-GCM Decrypted Successfully" << "\e[0m" << "\n\n";
+		else if(cipherID=="03") { // Aes256-GCM
+			if(aesfilefolder(mode, filePath, password)) {
+				std::cout << "\n\e[1m" << "Decrypted Successfully" << "\e[0m" << "\n\n";
 
-			if(askToContinue()) goto main_menu;
-			else {
-				std::cout << "\033[H\033[J"; // clear the screen
-				about();
-				std::cout << "Program Terminated.\n\n";
-				return 0;
+				if(askToContinue()) goto main_menu;
+				else {
+					std::cout << "\033[H\033[J"; // clear the screen
+					about();
+					std::cout << "Program Terminated.\n\n";
+					return 0;
+				}
+			} else {
+				if(askToContinue()) goto main_menu;
+				else {
+					std::cout << "\033[H\033[J"; // clear the screen
+					about();
+					std::cout << "Program Terminated.\n\n";
+					return 0;
+				}
 			}
 		}
-		// default
+		// default: if encryption algorithm
+		// is not Aes256-GCM, XChaCha20Poly1305 or SM4-GCM
 		else {
-			std::cout << "\nCannot decrypt." << "\n\n";
-
-			if(askToContinue()) goto main_menu;
-			else {
-				std::cout << "\033[H\033[J"; // clear the screen
-				about();
-				std::cout << "Program Terminated.\n\n";
-				return 0;
-			};
+			std::cout << "\nCannot decrypt. Encryption algorithm not recongnized." << "\n\n";
+			std::cout << "Program Terminated.\n\n";
+			return 0;
 		}
 	}
 	return 0;		
 }
-	
