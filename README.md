@@ -6,8 +6,6 @@
 
 **Version v1.4 (and future upgrade) is (will be) also available on Gitlab: https://gitlab.com/AndryRafam/neptunecrypt.**
 
-**Latest release: https://github.com/AndryRafam/NeptuneCrypt/releases/tag/v1.5 and here; https://gitlab.com/AndryRafam/neptunecrypt/-/releases/v1.5**
-
 ![](output/demo_v1.5.gif)
 
 <h2 algin="left"> About </h2>
