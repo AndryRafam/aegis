@@ -31,7 +31,7 @@ The software was built with C++ (std=23) and cryptopp-modern: https://cryptopp-m
 
 <h2 align="left"> Build, install and run on Linux (Debian, Fedora) </h2>
   
-To build and install NeptuneCrypt on Linux, go to the directory containing all the codes (for exemple: NeptuneCrypt-main if you downloaded from github repo) and type the following command in terminal (super user mode). The executable file will be installed at /usr/local/bin/ directory.
+To build and install NeptuneCrypt on Linux, go to the directory containing all the codes and type the following command in terminal (super user mode). The executable file will be installed at /usr/local/bin/ directory.
 
 ```bash
 $ sudo make
