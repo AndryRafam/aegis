@@ -4,7 +4,8 @@
 
 <h1 align="left"> NeptuneCrypt </h1>
 
-Version v1.4 (and future upgrade) is (will be) also available on Gitlab: https://gitlab.com/AndryRafam/neptunecrypt
+Version v1.4 (and future upgrade) is (will be) also available on Gitlab: https://gitlab.com/AndryRafam/neptunecrypt.
+
 Latest release: https://github.com/AndryRafam/NeptuneCrypt/releases/tag/v1.5 / https://gitlab.com/AndryRafam/neptunecrypt/-/releases/v1.5
 
 ![](output/demo_v1.5.gif)
