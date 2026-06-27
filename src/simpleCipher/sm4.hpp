@@ -17,6 +17,6 @@
 
 #include <string>
 
-bool sm4filefolder(std::string mode, std::string filePath, std::string password);
+bool sm4_cipher(std::string mode, std::string filePath, std::string password);
 
 #endif
