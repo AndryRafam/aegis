@@ -1,10 +1,10 @@
 #include <iostream>
 
-#include "xchacha20Cipher.hpp"
+#include "xchacha20.hpp"
 
 using namespace CryptoPP;
 
-bool xchacha20filefolder(std::string mode, std::string filePath, std::string password) {
+bool xchacha20_cipher(std::string mode, std::string filePath, std::string password) {
 	
 	// number of threads
 	const int threads = 4;
@@ -127,9 +127,9 @@ bool xchacha20filefolder(std::string mode, std::string filePath, std::string pas
 	}
 	
 	catch(Exception& ex) {
-		std::cout << "\nError encountered - Wrong password or Corrupted data.\n";
+		std::cout << "\033[1;31m" << "\nError: Wrong password or Corrupted data.\n";
 		std::cout << ex.what() << "\n";
-		std::cout << "Cannot decrypt.\n\n";
+		std::cout << "Cannot decrypt." << "\033[0m" << "\n\n";
 		
 		// remove the temporary file even decryption failed.
 		std::remove(tempfile.c_str());
