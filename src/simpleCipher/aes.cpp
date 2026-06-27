@@ -4,7 +4,7 @@
 
 using namespace CryptoPP;
 
-bool aesfilefolder(std::string mode, std::string filePath, std::string password) {
+bool aes_cipher(std::string mode, std::string filePath, std::string password) {
 
     // number of threads
 	const int threads = 4;
@@ -48,7 +48,7 @@ bool aesfilefolder(std::string mode, std::string filePath, std::string password)
             {
                 FileSink binarySink(tempfile.c_str());
 
-                // write ciphter ID for AES (0x01)
+                // write ciphter ID for AES
                 byte cipherID = 0x03;
                 binarySink.Put(&cipherID, 1);
 
@@ -131,9 +131,9 @@ bool aesfilefolder(std::string mode, std::string filePath, std::string password)
     }
 
     catch(Exception& ex) {
-        std::cout << "\nError encountered - Wrong password or Corrupted data.\n";
+        std::cout << "\033[1;31m" << "\nError: Wrong password or Corrupted data.\n";
 		std::cout << ex.what() << "\n";
-		std::cout << "Cannot decrypt.\n\n";
+		std::cout << "Cannot decrypt." << "\033[0m" << "\n\n";
 
         // remove the tempfile even if decryption failed
         std::remove(tempfile.c_str());
