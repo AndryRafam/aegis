@@ -17,6 +17,6 @@
 
 #include <string>
 
-bool aesfilefolder(std::string mode, std::string filePath, std::string password);
+bool aes_cipher(std::string mode, std::string filePath, std::string password);
 
 #endif
