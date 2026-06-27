@@ -5,76 +5,30 @@
 #include <termios.h>
 #include <unistd.h>
 
-#include "../simpleCipher/xchacha20Cipher.hpp"
+#include "../simpleCipher/xchacha20.hpp"
 #include "../simpleCipher/sm4.hpp"
 #include "../simpleCipher/aes.hpp"
+#include "../simpleCipher/twofish.hpp"
 #include "../password/password_generator.hpp"
 #include "../password/set_echo.hpp"
 
-#define yellow "\x1B[33m"
-#define reset "\x1B[0m"
-#define highlight "\x1B[7m"
+#define reset "\033[0m"
+#define highlight "\033[7m"
 
-// helper function to show about the program
-void about() {
-	const std::string aboutText = R"(NeptuneCrypt-v1.5, Encryption Software, June 2026
-Andry RAFAM ANDRIANJAFY <andryrafam@protonmail.com>
-https://github.com/andryrafam
+// helper function
+void about();
+std::string getValidFilePath();
+char getch();
+bool askToContinue();
+/*=======================================================*/
 
- NeptuneCrypt is free software, and
- comes with ABSOLUTELY NO WARRANTY.
-)";
-	std::cout << aboutText << std::endl;
-}
-
-// helper function to safely get an existing path via user input
-std::string getValidFilePath() {
-	std::string filePath;
-	while(true) {
-		std::cout << "File absolute path >: ";
-		std::getline(std::cin, filePath);
-
-		if(std::filesystem::is_regular_file(filePath)) {
-			return filePath;
-		}
-		// if file doesn't exist repeat the process
-		std::cout << "\e[1m" << "File doesn't exist" << "\e[0m" << std::endl;
-	}
-}
-
-// helper function for interactive mode
-char getch() {
-    struct termios oldt, newt; // old terminal, new terminal
-    char ch;
-    tcgetattr(STDIN_FILENO, &oldt);
-    newt = oldt;
-    newt.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-    ch = getchar();
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-    return ch;
-}
-
-// helper function to handle user continuation safely
-bool askToContinue() {
-	char yn; // [y/n]
-	while(true) {
-		std::cout << "Continue ? [y/n] >: ";
-		if(!(std::cin >> yn)) return false; // safely check for EOF/Ctrl+D
-		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-		if(yn=='y' || yn=='Y') return true;
-		if(yn=='n' || yn=='N') return false;
-		std::cout << "Invalid input. Only [y/n]\n"; // invalid input try again
-	}
-}
 // main function
 int main(/*int argc, char **argv*/) {
 
 	// Main menu
 	main_menu:
-	std::cout << "\033[H\033[J"; // clear the screen
-	about();
+		std::cout << "\033[H\033[J"; // clear the screen
+		about();
 
 	int select_mode = 0; // encryption, decryption, quit
 	char ch;
@@ -87,23 +41,23 @@ int main(/*int argc, char **argv*/) {
 
 		// line encrypt
 		if(select_mode==0) {
-			std::cout << " > " << highlight << "[ Encrypt ]" << reset << "  ";
+			std::cout << "  " << highlight << "< Encrypt >" << reset << "  ";
 		} else {
-			std::cout << "   [ Encrypt ]  ";
+			std::cout << "   < Encrypt >  ";
 		}
 
 		// line decrypt
 		if(select_mode==1) {
-			std::cout << " > " << highlight << "[ Decrypt ]" << reset << "  ";
+			std::cout << "  " << highlight << "< Decrypt >" << reset << "  ";
 		} else {
-			std::cout << "   [ Decrypt ]  ";
+			std::cout << "   < Decrypt >  ";
 		}
 
 		// line exit
 		if(select_mode==2) {
-			std::cout << " > " << highlight << "[ Exit ]" << reset << "\n";
+			std::cout << "  " << highlight << "< Exit >" << reset << "\n";
 		} else {
-			std::cout << "   [ Exit ]\n";
+			std::cout << "   < Exit >\n";
 		}
 
 		// Dynamic description Line
@@ -114,7 +68,7 @@ int main(/*int argc, char **argv*/) {
 		} else if(select_mode==1) {
 			std::cout << "\n";
 		} else if(select_mode==2) {
-			std::cout << "                               Exit the Program\n";
+			std::cout << "                                   Exit the Program\n";
 		}
 
 		ch = getch();
@@ -158,7 +112,14 @@ int main(/*int argc, char **argv*/) {
 		std::cout << "\e[1mEnrolling Encryption Mode\e[0m" << std::endl;
 		std::string filePath = getValidFilePath();
 
-		int selection = 0; // initialize selection
+		const std::vector<std::string> ciphers = {
+			"SM4-GCM",
+			"XChaCha20Poly1305",
+			"Aes256-GCM",
+			"Twofish-EAX"
+		};
+
+		size_t selection = 0; // initialize selection
 
 		std::cout << "\033[?25l"; // hide cursor
 
@@ -166,27 +127,14 @@ int main(/*int argc, char **argv*/) {
 		while (true) {
 			std::cout << "\nSelect cipher, use up/down key arrows, and then press enter:\n";
 
-			// SM4-GCM cipher mode
-			if(selection==0) {
-				std::cout << " > " << highlight << "SM4-GCM" << reset << "\n";
-			} else {
-				std::cout << "   SM4-GCM\n";
+			for(size_t i = 0; i < ciphers.size(); ++i) {
+				if(selection==i) {
+					std::cout << "  > " << highlight << ciphers[i] << reset << "\n";
+				} else {
+					std::cout << "    " << ciphers[i] << "\n";
+				}
 			}
-
-			// XChaCha20Poly1305 cipher mode
-			if(selection==1) {
-				std::cout << " > " << highlight << "XChaCha20Poly1305" << reset << "\n";
-			} else {
-				std::cout << "   XChaCha20Poly1305\n";
-			}
-
-			// Aes256-GCM cipher mode
-			if(selection==2) {
-				std::cout << " > " << highlight << "Aes256-GCM" << reset << "\n";
-			} else {
-				std::cout << "   Aes256-GCM\n";
-			}
-
+			
 			ch = getch();
 
 			if(ch==27) { // ascii value for escape
@@ -194,10 +142,10 @@ int main(/*int argc, char **argv*/) {
 				switch (getch()) { // read the final arrow character ('A' or 'B') directly
 					case 'A': // up arrow
 						// if at top, wrap around to bottom, otherwise decrement
-						selection = (selection==0) ? 2 : selection-1;
+						selection = (selection==0) ? ciphers.size() : selection-1;
 						break;
 					case 'B': // down arrow
-						selection = (selection==2) ? 0 : selection+1; 
+						selection = (selection==ciphers.size()) ? 0 : selection+1; 
 						break;
 				}
 			} else if(ch==10) {
@@ -205,7 +153,7 @@ int main(/*int argc, char **argv*/) {
 			}
 
 			// move up 5 lines to redraw seamlessly
-			std::cout << "\033[5A";
+			std::cout << "\033[6A";
 		}
 
 		std::cout << "\033[?25h"; // restore cursor
@@ -226,6 +174,8 @@ int main(/*int argc, char **argv*/) {
 			cipher_name = "XChaCha20Poly1305";
 		} else if(selection==2) {
 			cipher_name = "Aes256-GCM";
+		} else if(selection==3) {
+			cipher_name = "Twofish-EAX";
 		}
 
 		// SM4-GCM
@@ -233,10 +183,10 @@ int main(/*int argc, char **argv*/) {
 			
 			std::cout << "\033[H\033[J"; // clear the screen
 			about();
-			std::cout << "\e[1m" << "SM4-GCM Cipher Selected" << "\e[0m" << "\n\n";
+			std::cout << "\e[1m" << "SM4-GCM Cipher Selected" << "\e[0m" << "\n";
 			std::cout << "Generated Password >: " << password << std::endl;
-			sm4filefolder(mode, filePath, password);
-			std::cout << "\e[1m" << "Encrypted Successfully" << "\e[0m" << "\n\n";
+			sm4_cipher(mode, filePath, password);
+			std::cout << "\n\e[1m" << "Encrypted Successfully" << "\e[0m" << "\n\n";
 			
 			if(askToContinue()) goto main_menu;
 			else {
@@ -252,10 +202,10 @@ int main(/*int argc, char **argv*/) {
 			
 			std::cout << "\033[H\033[J"; // clear the screen
 			about();
-			std::cout << "\e[1m" << "XChaCha20Poly1305 Cipher Selected" << "\e[0m" << "\n\n";
+			std::cout << "\e[1m" << "XChaCha20Poly1305 Cipher Selected" << "\e[0m" << "\n";
 			std::cout << "Generated Password >: " << password << std::endl;
-			xchacha20filefolder(mode, filePath, password);
-			std::cout << "\e[1m" << "Encrypted Successfully" << "\e[0m" << "\n\n";
+			xchacha20_cipher(mode, filePath, password);
+			std::cout << "\n\e[1m" << "Encrypted Successfully" << "\e[0m" << "\n\n";
 
 			if(askToContinue()) goto main_menu;
 			else {
@@ -271,11 +221,30 @@ int main(/*int argc, char **argv*/) {
 
 			std::cout << "\033[H\033[J"; // clear the screen
 			about();
-			std::cout << "\e[1m" << "Aes256-GCM Cihper Selected" << "\e[0m" << "\n\n";
+			std::cout << "\e[1m" << "Aes256-GCM Cihper Selected" << "\e[0m" << "\n";
 			std::cout << "Generated Password >: " << password << std::endl;
-			aesfilefolder(mode, filePath, password);
-			std::cout << "\e[1m" << "Encrypted Successfully" << "\e[0m" << "\n\n";
+			aes_cipher(mode, filePath, password);
+			std::cout << "\n\e[1m" << "Encrypted Successfully" << "\e[0m" << "\n\n";
 			
+			if(askToContinue()) goto main_menu;
+			else {
+				std::cout << "\033[H\033[J"; // clear the screen
+				about();
+				std::cout << "Program Terminated.\n\n";
+				return 0;
+			}
+		}
+
+		// Twofish-EAX
+		else if(selection==3) {
+			
+			std::cout << "\033[H\033[J"; // clear the screen
+			about();
+			std::cout << "\e[1m" << "Twofish-EAX Cipher Selected" << "\e[0m" << "\n";
+			std::cout << "Generated Password >: " << password << std::endl;
+			twofish_cipher(mode, filePath, password);
+			std::cout << "\n\e[1m" << "Encrypted Successfully" << "\e[0m" << "\n\n";
+
 			if(askToContinue()) goto main_menu;
 			else {
 				std::cout << "\033[H\033[J"; // clear the screen
@@ -304,6 +273,7 @@ int main(/*int argc, char **argv*/) {
 		std::string cipherID(header, 2);
 		
 		std::string password;
+
 		std::cout << "Enter Password >: ";
 		setEcho(false); // disable mirroring input to the screen
 		std::getline(std::cin, password); // password will not be displayed for security reason
@@ -311,76 +281,99 @@ int main(/*int argc, char **argv*/) {
 		std::cout << std::endl;
 
 		// auto select decrypt function based on ID detected
-		if(cipherID=="01") { // SM4-GCM
-			if(sm4filefolder(mode, filePath, password)) {
-				std::cout << "\n\e[1m" << "Decrypted Successfully" << "\e[0m" << "\n\n";
-
-				if(askToContinue()) goto main_menu;
-				else {
-					std::cout << "\033[H\033[J"; // clear the screen
-					about();
-					std::cout << "Program Terminated.\n\n";
-					return 0;
-				}
-			} else {
-				if(askToContinue()) goto main_menu;
-				else {
-					std::cout << "\033[H\033[J"; // clear the screen
-					about();
-					std::cout << "Program Terminated.\n\n";
-					return 0;
-				}
-			}
-		}
-		else if(cipherID=="02") { // XChaCha20Poly1305
-			if(xchacha20filefolder(mode, filePath, password)) {
-				std::cout << "\n\e[1m" << "Decrypted Successfully" << "\e[0m" << "\n\n";
-
-				if(askToContinue()) goto main_menu;
-				else {
-					std::cout << "\033[H\033[J"; // clear the screen
-					about();
-					std::cout << "Program Terminated.\n\n";
-					return 0;
-				}
-			} else {
-				if(askToContinue()) goto main_menu;
-				else {
-					std::cout << "\033[H\033[J"; // clear the screen
-					about();
-					std::cout << "Program Terminated.\n\n";
-					return 0;
-				}
-			}
-		}
-		else if(cipherID=="03") { // Aes256-GCM
-			if(aesfilefolder(mode, filePath, password)) {
-				std::cout << "\n\e[1m" << "Decrypted Successfully" << "\e[0m" << "\n\n";
-
-				if(askToContinue()) goto main_menu;
-				else {
-					std::cout << "\033[H\033[J"; // clear the screen
-					about();
-					std::cout << "Program Terminated.\n\n";
-					return 0;
-				}
-			} else {
-				if(askToContinue()) goto main_menu;
-				else {
-					std::cout << "\033[H\033[J"; // clear the screen
-					about();
-					std::cout << "Program Terminated.\n\n";
-					return 0;
-				}
-			}
-		}
-		// default: if encryption algorithm
-		// is not Aes256-GCM, XChaCha20Poly1305 or SM4-GCM
+		bool success = false;
+		// SM4-GCM
+		if(cipherID=="01") success = sm4_cipher(mode, filePath, password);
+		// XChaCha20Poly1305
+		else if(cipherID=="02") success = xchacha20_cipher(mode, filePath, password);
+		// Aes256-GCM
+		else if(cipherID=="03") success = aes_cipher(mode, filePath, password);
+		// Twofish-EAX
+		else if(cipherID=="04") success = twofish_cipher(mode, filePath, password);
+		// default
 		else {
 			std::cout << "\nCannot decrypt. Encryption algorithm not recongnized." << "\n\n";
 			std::cout << "Program Terminated.\n\n";
 			return 0;
 		}
+
+		// decryption successful
+		if(success) {
+			std::cout << "\n\e[1m" << "Decrypted Successfully" << "\e[0m" << "\n\n";
+			if(askToContinue()) goto main_menu;
+			else {
+				std::cout << "\033[H\033[J"; // clear the screen
+				about();
+				std::cout << "Program Terminated.\n\n";
+				return 0;
+			}
+		}
+		// decryption failed
+		else {
+			if(askToContinue()) goto main_menu;
+			else {
+				std::cout << "\033[H\033[J"; // clear the screen
+				about();
+				std::cout << "Program Terminated.\n\n";
+				return 0;
+			}
+		return 0;
+		}
 	}
-	return 0;		
+	return 0;
+}
+
+/*================================================================*/
+
+void about() {
+	const std::string aboutText = R"(NeptuneCrypt 1.6, Encryption Software, June 2026
+Andry RAFAM ANDRIANJAFY <andryrafam@protonmail.com>
+https://github.com/andryrafam
+
+ NeptuneCrypt is free software, and
+ comes with ABSOLUTELY NO WARRANTY.
+)";
+	std::cout << aboutText << std::endl;
+}
+
+// helper function to safely get an existing path via user input
+std::string getValidFilePath() {
+	std::string filePath;
+	while(true) {
+		std::cout << "File absolute path >: ";
+		std::getline(std::cin, filePath);
+
+		if(std::filesystem::is_regular_file(filePath)) {
+			return filePath;
+		}
+		// if file doesn't exist repeat the process
+		std::cout << "\e[1m" << "File doesn't exist." << "\e[0m" << std::endl;
+	}
+}
+
+// helper function for interactive mode
+char getch() {
+    struct termios oldt, newt; // old terminal, new terminal
+    char ch;
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    ch = getchar();
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    return ch;
+}
+
+// helper function to handle user continuation safely
+bool askToContinue() {
+	char yn; // [y/n]
+	while(true) {
+		std::cout << "Continue ? [y/n] >: ";
+		if(!(std::cin >> yn)) return false; // safely check for EOF/Ctrl+D
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+		if(yn=='y' || yn=='Y') return true;
+		if(yn=='n' || yn=='N') return false;
+		std::cout << "Invalid input. Only [y/n].\n"; // invalid input try again
+	}
 }
