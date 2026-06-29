@@ -3,6 +3,7 @@
 [![Fedora](https://img.shields.io/badge/Fedora-51A2DA?logo=fedora&logoColor=fff)](#)
 
 <h1 align="left"> NeptuneCrypt </h1>
+**Also available here:** https://gitlab.com/AndryRafam/neptunecrypt
 
 ![](output/demo_1.6.gif)
 
