@@ -51,4 +51,5 @@ This command will remove the binary file neptune and all dependencies.
 
 Encrypting file is straightforward. To encrypt folder, first compress/archive the folder (.7z, .zip, .rar, .tar etc.) and then encrypt.
 
-**NEPTUNE-CRYPT IS A FREE SOFTWARE AND COMES WITH ABSOLUTELY NO WARRANTY.**
+
+**NeptuneCrypt is free software and comes with absolutely no warranty.**
