@@ -199,21 +199,13 @@ int main() {
 		std::uniform_int_distribution<int> distrib(16,32);
 		std::string password = generatePassword(distrib(gen));
 
-		std::filesystem::path password_file = filePath + "_password.txt";
-
 		// SM4-GCM
 		if(cipher_selection==0) { 
 			
 			clearScreen();
 			std::cout << BOLD << "SM4-GCM Cipher Selected" << RESET << "\n\n";
 			std::cout << "Generated Password >: " << password << "\n";
-			std::ofstream outFile(password_file);
-			if (outFile) {
-				outFile << password;
-				std::cout << "Password saved at : " << password_file << "\n";
-				std::cout << "Do not lose your password or you will not recover your data.\n";
-				outFile.close();
-			}
+			std::cout << "Do not lose your password or you will not recover your data.\n";
 			sm4_cipher(mode, filePath, password);
 			std::cout << "\n" << BOLD << "Encrypted Successfully" << RESET << "\n"; 
 			
@@ -231,13 +223,7 @@ int main() {
 			clearScreen();
 			std::cout << BOLD << "XChaCha20Poly1305 Cipher Selected" << RESET << "\n\n";
 			std::cout << "Generated Password >: " << password << "\n";
-			std::ofstream outFile(password_file);
-			if (outFile) {
-				outFile << password;
-				std::cout << "Password saved at : " << password_file << "\n";
-				std::cout << "Do not lose your password or you will not recover your data.\n";
-				outFile.close();
-			}
+			std::cout << "Do not lose your password or you will not recover your data.\n";
 			xchacha20_cipher(mode, filePath, password);
 			std::cout << "\n" << BOLD << "Encrypted Successfully" << RESET << "\n";
 
@@ -255,13 +241,7 @@ int main() {
 			clearScreen();
 			std::cout << BOLD << "Aes256-GCM Cihper Selected" << RESET << "\n\n";
 			std::cout << "Generated Password >: " << password << "\n";
-			std::ofstream outFile(password_file);
-			if (outFile) {
-				outFile << password;
-				std::cout << "Password saved at : " << password_file << "\n";
-				std::cout << "Do not lose your password or you will not recover your data.\n";
-				outFile.close();
-			}
+			std::cout << "Do not lose your password or you will not recover your data.\n";
 			aes_cipher(mode, filePath, password);
 			std::cout << "\n" << BOLD << "Encrypted Successfully" << RESET << "\n";
 			
@@ -279,13 +259,7 @@ int main() {
 			clearScreen();
 			std::cout << BOLD << "Twofish-EAX Cipher Selected" << RESET << "\n\n";
 			std::cout << "Generated Password >: " << password << "\n";
-			std::ofstream outFile(password_file);
-			if (outFile) {
-				outFile << password;
-				std::cout << "Password saved at : " << password_file << "\n";
-				std::cout << "Do not lose your password or you will not recover your data.\n";
-				outFile.close();
-			}
+			std::cout << "Do not lose your password or you will not recover your data.\n";
 			twofish_cipher(mode, filePath, password);
 			std::cout << "\n" << BOLD << "Encrypted Successfully" << RESET << "\n";
 
