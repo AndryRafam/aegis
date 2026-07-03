@@ -247,7 +247,6 @@ bool encryptionMode() {
 	std::cout << "\033[?25h"; // restore cursor
 
 	// initialize random number for password legnth [16,32]
-	// Initialize random number for password length [16,32]
     static std::random_device rd;
     static std::mt19937 gen(rd());
     std::uniform_int_distribution<int> distrib(16, 32);
