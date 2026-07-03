@@ -47,7 +47,7 @@ Compile the executable
 $ cmake --build build
 ```
 ```bash
-Installs 'neptune' straight to /usr/local/bin
+Install 'neptune' straight to /usr/local/bin
 $ sudo cmake --install build
 ```
 To run on Linux, type the following command anywhere in terminal
@@ -55,16 +55,23 @@ To run on Linux, type the following command anywhere in terminal
 ```bash
 $ neptune
 ```
-<h2 align="left"> How to purge </h2>
-
+<h2 align="left"> Cleaning up </h2>
+<h3 align="left"> Makefile </h3>
 ```bash
+This command will remove the binary file neptune and all dependencies.
 $ sudo make clean
 ```
-This command will remove the binary file neptune and all dependencies.
+<h3 align="left"> CMake </h3>
+```bash
+$ rm -rf build/
+```
+```bash
+To purge the installed binary from /usr/local/bin, run:
+$ sudo rm -f /usr/local/bin/neptune
+```
 
 <h2 align="left"> How to encrypt folders ? </h2>
 
 Encrypting file is straightforward. To encrypt folder, first compress/archive the folder (.7z, .zip, .rar, .tar etc.) and then encrypt.
-
 
 **NeptuneCrypt is free software and comes with absolutely no warranty.**
