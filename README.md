@@ -46,7 +46,11 @@ $ cmake -B build -S .
 Compile the executable
 $ cmake --build build
 ```
-To run NeptuneCrypt on Linux, type the following command anywhere in terminal
+```bash
+Installs 'neptune' straight to /usr/local/bin
+$ sudo cmake --install build
+```
+To run on Linux, type the following command anywhere in terminal
 
 ```bash
 $ neptune
