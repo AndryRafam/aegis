@@ -13,7 +13,7 @@ endif
 
 .DEFAULT_GOAL := install
 
-ccsrc = $(wildcard src/simpleCipher/*.cpp) \
+ccsrc = $(wildcard src/cipher/*.cpp) \
 		$(wildcard src/password/*.cpp) \
 		$(wildcard src/driverProgram/*.cpp) 
 		
