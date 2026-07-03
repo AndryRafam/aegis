@@ -17,7 +17,7 @@ add_compile_options(-Wall -Wextra)
 # 4. Find Dependencies
 find_package(Threads REQUIRED)
 
-# Locate cryptopp (Checking standard locations + /usr/local/lib as per your Makefile)
+# Locate cryptopp
 find_library(CRYPTOPP_LIB NAMES cryptopp HINTS /usr/local/lib)
 if(NOT CRYPTOPP_LIB)
     message(FATAL_ERROR "ERROR: cryptopp library not found. Please install cryptopp-modern.")
