@@ -6,7 +6,7 @@
 
 **Also available here:** https://gitlab.com/AndryRafam/neptunecrypt
 
-![](output/demo_.gif)
+![](output/demo_1.gif)
 
 <h2 algin="left"> About </h2>
 
