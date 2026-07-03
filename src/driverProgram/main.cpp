@@ -6,16 +6,17 @@
 #include <termios.h>
 #include <unistd.h>
 
-#include "../simpleCipher/xchacha20.hpp"
-#include "../simpleCipher/sm4.hpp"
-#include "../simpleCipher/aes.hpp"
-#include "../simpleCipher/twofish.hpp"
+#include "../cipher/xchacha20.hpp"
+#include "../cipher/sm4.hpp"
+#include "../cipher/aes.hpp"
+#include "../cipher/twofish.hpp"
 #include "../password/password_generator.hpp"
 #include "../password/set_echo.hpp"
 
 constexpr std::string_view RESET = "\033[0m";
 constexpr std::string_view HIGHLIGHT = "\033[7m";
 constexpr std::string_view BOLD = "\e[1m";
+constexpr std::string_view BOLD_RED = "\033[1;31m";
 
 // forward declaration
 void about();
@@ -23,141 +24,56 @@ std::string getValidFilePath();
 char getch();
 bool askToContinue();
 void clearScreen();
+bool encryptionMode();
+bool decryptionMode();
 
 /*=======================================================*/
-
 // main function
+/*=======================================================*/
+
 int main() {
-
-	// Main menu
-	main_menu:
+	while(true) {
 		clearScreen();
 
-	int select_mode = 0; // encrypt or decrypt
-	char ch;
-
-	std::cout << "\033[?25l"; // hide cursor
-
-	// part of code to interact with the mode choice: encrypt, decrypt or quit.
-	while (true) {
-		std::cout << "Choose mode using left/right key arrows and press enter:\n";
-
-		// line encrypt
-		if(select_mode==0) {
-			std::cout << "  " << HIGHLIGHT << "< Encrypt >" << RESET << " ";
-		} else {
-			std::cout << "  < Encrypt > ";
-		}
-
-		// line decrypt
-		if(select_mode==1) {
-			std::cout << "  " << HIGHLIGHT << "< Decrypt >" << RESET << " ";
-		} else {
-			std::cout << "  < Decrypt > ";
-		}
-
-		// line exit
-		if(select_mode==2) {
-			std::cout << "  " << HIGHLIGHT << "< Exit >" << RESET << "\n";
-		} else {
-			std::cout << "  < Exit >\n";
-		}
-
-		// Dynamic description Line
-		std::cout << "\n"; // 1. add an extra empty line
-		std::cout << "\033[K"; // 2. clear the line to prevent "ghost text"
-		if(select_mode==0) {
-			std::cout << "\n";
-		} else if(select_mode==1) {
-			std::cout << "\n";
-		} else if(select_mode==2) {
-			std::cout << "                              Exit the Program\n";
-		}
-
-		ch = getch();
-
-		if(ch==27) { // ascii value for escape
-			getch(); // discard the intermediate '[' character
-			switch (getch()) { // read the final arrow character ('A' or 'B') directly
-				case 'D': // left arrow 
-					// if at leftmost item, wrap around to the rightmost, otherwise decrement
-					select_mode = (select_mode==0) ? 2 : select_mode - 1;
-					break;
-				case 'C': // right arrow
-					// if at rightmost item, wrap around to the leftmost, otherwise increment
-					select_mode = (select_mode==2) ? 0 : select_mode + 1; 
-					break;
-			}
-		} else if(ch==10) {
-			break; // enter key
-		}
-
-		// move 4 lines to redraw seamlessly
-		std::cout << "\033[4A"; 
-	}
-
-	std::cout << "\033[?25h"; // restore cursor
-
-	// if the user choice is "Exit", exit the program immediately
-	if(select_mode==2) {
-		clearScreen();
-		std::cout << "Program Terminated.\n\n";
-		return 0; // exit main function right here
-	}
-
-	std::string mode = (select_mode==0) ? "encrypt" : "decrypt";
-	
-	// encryption
-	if (mode=="encrypt") {
-
-		clearScreen();
-		std::cout << BOLD << "Enrolling Encryption Mode" << RESET << std::endl;
-		std::string filePath = getValidFilePath();
-
-		const std::vector<std::string> ciphers = {
-			"SM4-GCM",
-			"XChaCha20Poly1305",
-			"Aes256-GCM",
-			"Twofish-EAX"
-		};
-
-		size_t cipher_selection = 0; // initialize selection
-		int action_selection = 0; // 0 = proceed, 1 = exit
+		int select_mode = 0; // encrypt or decrypt
+		char ch;
 
 		std::cout << "\033[?25l"; // hide cursor
 
-		// select cipher interactive
+		// part of code to interact with the mode choice: encrypt, decrypt or quit.
 		while (true) {
-			std::cout << "\nSelect cipher and choose < Proceed > using key arrows:\n";
+			std::cout << "Choose mode using left/right key arrows and press enter:\n";
 
-			for(size_t i = 0; i < ciphers.size(); ++i) {
-				if(cipher_selection==i) {
-					std::cout << "  > " << HIGHLIGHT << ciphers[i] << RESET << "\n";
-				} else {
-					std::cout << "    " << ciphers[i] << "\n";
-				}
+			// line encrypt
+			if(select_mode==0) {
+				std::cout << "  " << HIGHLIGHT << "< Encrypt >" << RESET << " ";
+			} else {
+				std::cout << "  < Encrypt > ";
 			}
 
-			// proceed or exit
-			std::cout << "\n";
-			if(action_selection==0) {
-				std::cout << "    " << HIGHLIGHT << "< Proceed >" << RESET << "  ";
+			// line decrypt
+			if(select_mode==1) {
+				std::cout << "  " << HIGHLIGHT << "< Decrypt >" << RESET << " ";
 			} else {
-				std::cout << "    < Proceed >  ";
+				std::cout << "  < Decrypt > ";
 			}
-			if(action_selection==1) {
-				std::cout << "  " << HIGHLIGHT << "< Go Back >" << RESET << "\n";
+
+			// line exit
+			if(select_mode==2) {
+				std::cout << "  " << HIGHLIGHT << "< Exit >" << RESET << "\n";
 			} else {
-				std::cout << "  < Go Back >\n";
+				std::cout << "  < Exit >\n";
 			}
-			
+
+			// Dynamic description Line
 			std::cout << "\n"; // 1. add an extra empty line
 			std::cout << "\033[K"; // 2. clear the line to prevent "ghost text"
-			if(action_selection==0) {
+			if(select_mode==0) {
 				std::cout << "\n";
-			}
-			else if(action_selection==1) {
-				std::cout << "                 Back to Main Menu\n";
+			} else if(select_mode==1) {
+				std::cout << "\n";
+			} else if(select_mode==2) {
+				std::cout << "                              Exit the Program\n";
 			}
 
 			ch = getch();
@@ -165,181 +81,43 @@ int main() {
 			if(ch==27) { // ascii value for escape
 				getch(); // discard the intermediate '[' character
 				switch (getch()) { // read the final arrow character ('A' or 'B') directly
-					case 'A': // up arrow
-						// if at top, wrap around to bottom, otherwise decrement
-						cipher_selection = (cipher_selection==0) ? ciphers.size()-1 : cipher_selection-1;
-						break;
-					case 'B': // down arrow
-						cipher_selection = (cipher_selection==ciphers.size()-1) ? 0 : cipher_selection+1; 
-						break;
-					case 'D': // left arrow
-						action_selection = (action_selection==0) ? 1 : action_selection-1;
+					case 'D': // left arrow 
+						// if at leftmost item, wrap around to the rightmost, otherwise decrement
+						select_mode = (select_mode==0) ? 2 : select_mode - 1;
 						break;
 					case 'C': // right arrow
-						action_selection = (action_selection==1) ? 0 : action_selection+1;
+						// if at rightmost item, wrap around to the leftmost, otherwise increment
+						select_mode = (select_mode==2) ? 0 : select_mode + 1; 
 						break;
 				}
 			} else if(ch==10) {
-				// if the user select < Exit >, exit the program
-				if(action_selection==1) goto main_menu;
-				// if the user select < Proceed >, continue
 				break; // enter key
 			}
 
-			// move up ciphers.size()+4 lines to redraw seamlessly
-			std::cout << "\033[" << ciphers.size()+6 << "A";
+			// move 4 lines to redraw seamlessly
+			std::cout << "\033[4A"; 
 		}
 
 		std::cout << "\033[?25h"; // restore cursor
 
-		/*Initialize random number [16,32] length
-		using mersene twister*/
-		static std::random_device rd;
-		static std::mt19937 gen(rd());
-		std::uniform_int_distribution<int> distrib(16,32);
-		std::string password = generatePassword(distrib(gen));
-
-		// SM4-GCM
-		if(cipher_selection==0) { 
-			
+		// if the user choice is "Exit", exit the program immediately
+		if(select_mode==2) {
 			clearScreen();
-			std::cout << BOLD << "SM4-GCM Cipher Selected" << RESET << "\n\n";
-			std::cout << "Generated Password >: " << password << "\n";
-			std::cout << "Do not lose your password or you will not recover your data.\n";
-			sm4_cipher(mode, filePath, password);
-			std::cout << "\n" << BOLD << "Encrypted Successfully" << RESET << "\n"; 
-			
-			if(askToContinue()) goto main_menu;
-			else {
-				clearScreen();
-				std::cout << "Program Terminated.\n\n";
-				return 0;
-			}
-		}
-
-		// XChaCha20Poly1305
-		else if(cipher_selection==1) { 
-			
-			clearScreen();
-			std::cout << BOLD << "XChaCha20Poly1305 Cipher Selected" << RESET << "\n\n";
-			std::cout << "Generated Password >: " << password << "\n";
-			std::cout << "Do not lose your password or you will not recover your data.\n";
-			xchacha20_cipher(mode, filePath, password);
-			std::cout << "\n" << BOLD << "Encrypted Successfully" << RESET << "\n";
-
-			if(askToContinue()) goto main_menu;
-			else {
-				clearScreen();
-				std::cout << "Program Terminated.\n\n";
-				return 0;
-			}
-		}
-
-		// Aes256-GCM
-		else if(cipher_selection==2) { 
-
-			clearScreen();
-			std::cout << BOLD << "Aes256-GCM Cihper Selected" << RESET << "\n\n";
-			std::cout << "Generated Password >: " << password << "\n";
-			std::cout << "Do not lose your password or you will not recover your data.\n";
-			aes_cipher(mode, filePath, password);
-			std::cout << "\n" << BOLD << "Encrypted Successfully" << RESET << "\n";
-			
-			if(askToContinue()) goto main_menu;
-			else {
-				clearScreen();
-				std::cout << "Program Terminated.\n\n";
-				return 0;
-			}
-		}
-
-		// Twofish-EAX
-		else if(cipher_selection==3) {
-			
-			clearScreen();
-			std::cout << BOLD << "Twofish-EAX Cipher Selected" << RESET << "\n\n";
-			std::cout << "Generated Password >: " << password << "\n";
-			std::cout << "Do not lose your password or you will not recover your data.\n";
-			twofish_cipher(mode, filePath, password);
-			std::cout << "\n" << BOLD << "Encrypted Successfully" << RESET << "\n";
-
-			if(askToContinue()) goto main_menu;
-			else {
-				clearScreen();
-				std::cout << "Program Terminated.\n\n";
-				return 0;
-			}
-		}
-	}
-	
-	// decryption
-	else if(mode=="decrypt") {
-		
-		clearScreen();
-		std::cout << BOLD << "Enrolling Decryption Mode" << RESET << std::endl;
-		std::string filePath = getValidFilePath();
-
-		std::ifstream file(filePath);
-		
-		// read the 2 first characters of the file
-		char header[2];
-		file.read(header, 2);
-		file.close();
-
-		std::string cipherID(header, 2);
-		
-		std::string password;
-
-		std::cout << "Enter Password >: ";
-		setEcho(false); // disable mirroring input to the screen
-		std::getline(std::cin, password); // password will not be displayed for security reason
-		setEcho(true); //
-		std::cout << std::endl;
-
-		// auto select decrypt function based on ID detected
-		bool success = false;
-		// SM4-GCM
-		if(cipherID=="01") success = sm4_cipher(mode, filePath, password);
-		// XChaCha20Poly1305
-		else if(cipherID=="02") success = xchacha20_cipher(mode, filePath, password);
-		// Aes256-GCM
-		else if(cipherID=="03") success = aes_cipher(mode, filePath, password);
-		// Twofish-EAX
-		else if(cipherID=="04") success = twofish_cipher(mode, filePath, password);
-		// default
-		else {
-			std::cout << "\nCannot decrypt. Encryption algorithm not recongnized." << "\n\n";
 			std::cout << "Program Terminated.\n\n";
-			return 0;
+			return 0; // exit main function right here
 		}
 
-		// decryption successful
-		if(success) {
-			std::cout << "\n" << BOLD << "Decrypted Successfully" << RESET << "\n";
-			if(askToContinue()) goto main_menu;
-			else {
-				clearScreen();
-				std::cout << "Program Terminated.\n\n";
-				return 0;
-			}
-		}
-		// decryption failed
-		else {
-			if(askToContinue()) goto main_menu;
-			else {
-				clearScreen();
-				std::cout << "Program Terminated.\n\n";
-				return 0;
-			}
-		return 0;
+		if(select_mode==0) {
+			if(!encryptionMode()) return 0;
+		} else if(select_mode==1) {
+			if(!decryptionMode()) return 0;
 		}
 	}
-	return 0;
 }
 
-/*================================================================
+/*================================================================*/
 // Helper Function
-=================================================================*/
+/*================================================================*/
 
 void about() {
 	const std::string aboutText = R"( NeptuneCrypt 1.6, Encryption Software, June 2026
@@ -394,4 +172,150 @@ bool askToContinue() {
 void clearScreen() {
 	std::cout << "\033[H\033[J"; // clear the screen
 	about();
+}
+
+// encryption mode
+bool encryptionMode() {
+	clearScreen();
+	std::cout << BOLD << "Enrolling Encryption Mode" << RESET << std::endl;
+	std::string filePath = getValidFilePath();
+
+	const std::vector<std::string> ciphers = {
+		"SM4-GCM",
+        "XChaCha20Poly1305",
+        "Aes256-GCM",
+        "Twofish-EAX"
+	};
+
+	size_t cipher_selection = 0;
+	int action_selection = 0; // 0 = proceed, 1 = go back
+	char ch;
+
+	std::cout << "\033[?25l"; // hide cursor
+
+	// select cipher interactive loop
+	while(true) {
+		std::cout << "\nSelect cipher and choose < Proceed > using key arrows:\n";
+
+		for(size_t i = 0; i < ciphers.size(); ++i) {
+			if (cipher_selection == i) {
+                std::cout << "  > " << HIGHLIGHT << ciphers[i] << RESET << "\n";
+            } else {
+                std::cout << "    " << ciphers[i] << "\n";
+            }
+		}
+
+		std::cout << "\n";
+		if(action_selection==0) std::cout << "    " << HIGHLIGHT << "< Proceed >" << RESET << "  ";
+		else std::cout << "    < Proceed >  ";
+
+		if(action_selection==1) std::cout << "  " << HIGHLIGHT << "< Go Back >" << RESET << "\n";
+		else std::cout << "  < Go Back >\n";
+
+		std::cout << "\n\033[K";
+		if(action_selection==1) std::cout << "                 Back to Main Menu\n";
+		else std::cout << "\n";
+
+		ch = getch();
+
+		if(ch==27) {
+			getch();
+			switch(getch()) {
+				case 'A': // Up arrow
+                    cipher_selection = (cipher_selection == 0) ? ciphers.size() - 1 : cipher_selection - 1;
+                    break;
+                case 'B': // Down arrow
+                    cipher_selection = (cipher_selection == ciphers.size() - 1) ? 0 : cipher_selection + 1; 
+                    break;
+                case 'D': // Left arrow
+                    action_selection = (action_selection == 0) ? 1 : action_selection - 1;
+                    break;
+                case 'C': // Right arrow
+                    action_selection = (action_selection == 1) ? 0 : action_selection + 1;
+                    break;
+			}
+		} else if(ch==10) {
+			if(action_selection==1) {
+				std::cout << "\033[?25h";
+				return true; // go back to main menu loop
+			}
+			break;
+		}
+		std::cout << "\033[" << ciphers.size() + 6 << "A"; // Redraw menu dynamically
+	}
+
+	std::cout << "\033[?25h"; // restore cursor
+
+	// initialize random number for password legnth [16,32]
+	// Initialize random number for password length [16,32]
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> distrib(16, 32);
+    std::string password = generatePassword(distrib(gen));
+
+    clearScreen();
+    std::string cipherName = ciphers[cipher_selection];
+    std::cout << BOLD << cipherName << " Cipher Selected" << RESET << "\n\n";
+    std::cout << "Generated Password >: " << password << "\n";
+
+	// run selected cipher
+	if(cipher_selection==0) sm4_cipher("encrypt", filePath, password);
+	else if(cipher_selection==1) xchacha20_cipher("encrypt", filePath, password);
+	else if(cipher_selection==2) aes_cipher("encrypt", filePath, password);
+	else if(cipher_selection==3) twofish_cipher("encrypt", filePath, password);
+
+	std::cout << "\n" << BOLD << "Encrypted Successfully" << RESET << "\n";
+	std::cout << BOLD_RED << "CRITICAL: Do not lose your password or you will not recover your data." << RESET << "\n";
+
+	if(askToContinue()) return true;
+
+	clearScreen();
+	std::cout << "Program Terminated.\n\n";
+	return false;
+}
+
+// decryption mode
+bool decryptionMode() {
+	clearScreen();
+	std::cout << BOLD << "Enrolling Decryption Mode" << RESET << std::endl;
+	std::string filePath = getValidFilePath();
+
+	std::ifstream file(filePath, std::ios::binary);
+	if(!file) {
+		std::cout << "\nError opening file for reading.\n";
+		if(askToContinue()) return true;
+		return false;
+	}
+
+	char header[2];
+	file.read(header, 2);
+	file.close();
+
+	std::string cipherID(header, 2);
+	std::string password;
+
+	std::cout << "Enter Password >: ";
+	setEcho(false);
+	std::getline(std::cin, password);
+	setEcho(true);
+	std::cout << std::endl;
+
+	bool success = false;
+
+	if(cipherID=="01") success = sm4_cipher("decrypt", filePath, password);
+	else if(cipherID=="02") success = xchacha20_cipher("decrypt", filePath, password);
+	else if(cipherID=="03") success = aes_cipher("decrypt", filePath, password);
+	else if(cipherID=="04") success = twofish_cipher("decrypt", filePath, password);
+	else {
+		std::cout << "\nCannot decrypt. Encryption algorithm not recognized." << "\n\n";
+		std::cout << "Program Terminated.\n\n";
+        return false;
+	}
+
+	if(success) std::cout << "\n" << BOLD << "Decrypted Successfully" << RESET << "\n";
+	if(askToContinue()) return true;
+
+	clearScreen();
+	std::cout << "Program Terminated.\n\n";
+	return false;
 }
