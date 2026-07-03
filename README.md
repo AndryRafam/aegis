@@ -41,17 +41,19 @@ $ neptune
 ```
 <h3 align="left"> CMake </h3>
 To build and install using cmake, type the following command in terminal. The executable file will be installed at /usr/local/bin/ directory.
+Create and enter a temporary build directory
 
 ```bash
-Create and enter a temporary build directory
 $ cmake -B build -S .
 ```
-```bash
 Compile the executable
+
+```bash
 $ cmake --build build
 ```
-```bash
 Install 'neptune' straight to /usr/local/bin
+
+```bash
 $ sudo cmake --install build
 ```
 To run on Linux, type the following command anywhere in terminal
@@ -62,8 +64,9 @@ $ neptune
 <h2 align="left"> Cleaning up </h2>
 <h3 align="left"> Makefile </h3>
 
-```bash
 This command will remove the binary file neptune and all dependencies.
+
+```bash
 $ sudo make clean
 ```
 <h3 align="left"> CMake </h3>
@@ -71,9 +74,9 @@ $ sudo make clean
 ```bash
 $ rm -rf build/
 ```
+To purge the installed binary from /usr/local/bin, run:
 
 ```bash
-To purge the installed binary from /usr/local/bin, run:
 $ sudo rm -f /usr/local/bin/neptune
 ```
 <h2 align="left"> How to encrypt folders ? </h2>
