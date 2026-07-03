@@ -19,6 +19,8 @@ constexpr std::string_view HIGHLIGHT = "\033[30;46m";
 constexpr std::string_view BOLD = "\033[1m";
 constexpr std::string_view BOLD_RED = "\033[1;31m";
 
+namespace fs = std::filesystem;
+
 // forward declaration
 void about();
 std::string getValidPath();
@@ -137,7 +139,7 @@ std::string getValidPath() {
 		std::cout << "File absolute path >: ";
 		std::getline(std::cin, filePath);
 
-		if(std::filesystem::is_regular_file(filePath)) return filePath;
+		if(fs::is_regular_file(filePath)) return filePath;
 		// if file doesn't exist repeat the process
 		std::cout << BOLD << "File doesn't exist." << RESET << std::endl;
 	}
