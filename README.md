@@ -33,33 +33,33 @@ The software was built with C++ (std=23) and cryptopp-modern: https://cryptopp-m
 To build and install using cmake, type the following command in terminal. The executable file will be installed at /usr/local/bin/ directory.
 Create and enter a temporary build directory
 
-```json
-$ cmake -B build -S .
+```diff
+ $ cmake -B build -S .
 ```
 Compile the executable
 
-```bash
+```json
 $ cmake --build build
 ```
 Install 'neptune' straight to /usr/local/bin
 
-```bash
+```json
 $ sudo cmake --install build
 ```
 To run on Linux, type the following command anywhere in terminal
 
-```bash
+```json
 $ neptune
 ```
 <h2 align="left"> Cleaning up </h2>
 <h3 align="left"> CMake </h3>
 
-```bash
+```json
 $ rm -rf build/
 ```
 To purge the installed binary from /usr/local/bin, run:
 
-```bash
+```json
 $ sudo rm -f /usr/local/bin/neptune
 ```
 <h2 align="left"> How to encrypt folders ? </h2>
