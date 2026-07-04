@@ -64,6 +64,9 @@ $ sudo rm -f /usr/local/bin/neptune
 ```
 <h2 align="left"> How to encrypt folders ? </h2>
 
-Encrypting file is straightforward. To encrypt folder, first compress/archive the folder (.7z, .zip, .rar, .tar etc.) and then encrypt.
+To encrypt folder, first compress/archive the folder (.7z, .zip, .rar, .tar etc.) and then encrypt.
 
-**NeptuneCrypt is free software and comes with absolutely no warranty.**
+<h2 align="left"> Acknowledgement </h2>
+
+NeptuneCrypt is free software and comes with absolutely no warranty. This software is intended for personal use and educational use only. It is not suitable for industrial/professional use.
+
