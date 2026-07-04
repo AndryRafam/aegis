@@ -4,7 +4,7 @@
 
 <h1 align="left"> NeptuneCrypt </h1>
 
-**Also available here:** https://gitlab.com/AndryRafam/neptunecrypt
+**Earlier release v1.4 to v1.6 is here:** https://gitlab.com/AndryRafam/neptunecrypt/-/releases
 
 ![](output/demo_1.gif)
 
