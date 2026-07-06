@@ -49,7 +49,7 @@ bool aes_cipher(std::string mode, std::string filePath, std::string password) {
                 FileSink binarySink(tempfile.c_str());
 
                 // write ciphter ID for AES
-                byte cipherID = 0x03;
+                byte cipherID = 0x01;
                 binarySink.Put(&cipherID, 1);
 
                 // write Salt + IV + Ciphertext into a temporary binary file
@@ -89,7 +89,7 @@ bool aes_cipher(std::string mode, std::string filePath, std::string password) {
             byte cipherID = 0;
             in.read((char*)&cipherID, 1);
             if (in.gcount()!=1) throw std::runtime_error("File truncated: Missing Cipher ID.");
-            if (cipherID != 0x03) throw std::runtime_error("Cipher ID mismatch: This file was not encrypted with AES.");
+            if (cipherID != 0x01) throw std::runtime_error("Cipher ID mismatch: This file was not encrypted with AES.");
 
             // extract salt and iv
             SecByteBlock salt(SALT_SIZE);
