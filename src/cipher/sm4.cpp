@@ -1,35 +1,35 @@
 #include <iostream>
 
-#include "sm4.hpp"
+#include "twofish.hpp"
 
 using namespace CryptoPP;
 
-bool sm4_cipher(std::string mode, std::string filePath, std::string password) {
+bool twofish_cipher(std::string mode, std::string filePath, std::string password) {
 
     // number of threads
-	const int threads = 4;
+    const int threads = 4;
 
     // temporary file to avoid
     // data loss
     std::string tempfile = filePath+".tmp";
     std::string tempfile_hex = filePath+".tmphex";
 
-    const int IV_SIZE = 12; // iv size
-    const int TAG_SIZE = 16; // standard 128-bit authentication tag
-    const int SALT_SIZE = 16; // Argon2 recommends at least 16 bytes
+    const int IV_SIZE = 16; // 16 bytes iv size for twofish eax mode
+    const int TAG_SIZE = 16; // standard 116 bytes authentication tag
+    const int SALT_SIZE = 16; // argon2 recommends at least 16 bytes
 
     try {
 
         AutoSeededRandomPool rng;
-        
+
         /*ENCRYPTION MODE*/
         if(mode=="encrypt") {
-        
-            // Setup key, IV and unique random salt
-            SecByteBlock key(SM4::DEFAULT_KEYLENGTH); // 16 bytes (128 bits)
+
+            // setup key, IV and unique random salt
+            SecByteBlock key(Twofish::MAX_KEYLENGTH); // 32 bytes (256 bits)
             rng.GenerateBlock(key, key.size());
-            
-            SecByteBlock iv(IV_SIZE); // 12 bytes (96 bits)
+
+            SecByteBlock iv(IV_SIZE); // 16 bytes for EAX
             rng.GenerateBlock(iv, iv.size());
 
             SecByteBlock salt(SALT_SIZE);
@@ -44,27 +44,27 @@ bool sm4_cipher(std::string mode, std::string filePath, std::string password) {
                 65536, // memory cost (64 MB)
                 threads // number of threads
             );
-            
+
             {
                 FileSink binarySink(tempfile.c_str());
 
-                // write cipher ID for SM4
-                byte cipherID = 0x02;
+                // write cipher ID for twofish
+                byte cipherID = 0x03;
                 binarySink.Put(&cipherID, 1);
 
                 // write Salt + IV + Ciphertext into a temporary binary file
                 binarySink.Put(salt, salt.size());
                 binarySink.Put(iv, iv.size());
 
-                GCM<SM4>::Encryption sm4_enc;
-                sm4_enc.SetKeyWithIV(key, key.size(), iv, iv.size());
+                EAX<Twofish>::Encryption twofish_enc;
+                twofish_enc.SetKeyWithIV(key, key.size(),iv, iv.size());
 
                 // stream the file payload right after the header data
                 FileSource(filePath.c_str(), true,
-                    new AuthenticatedEncryptionFilter(sm4_enc, new Redirector(binarySink), false, TAG_SIZE)
-                );
+                    new AuthenticatedEncryptionFilter(twofish_enc, new Redirector(binarySink),
+                    false, TAG_SIZE));
             }
-            
+
             // hexadecimal encoding
             // for pretty looking
             FileSource(tempfile.c_str(), true, new HexEncoder(new FileSink(tempfile_hex.c_str())));
@@ -85,13 +85,13 @@ bool sm4_cipher(std::string mode, std::string filePath, std::string password) {
             // extract salt and IV out of the decoded temporary file
             std::ifstream in(tempfile_hex.c_str(), std::ios::binary);
 
-            // extract and validate cipher ID
+            // extract and validated cipher ID
             byte cipherID = 0;
             in.read((char*)&cipherID, 1);
             if (in.gcount()!=1) throw std::runtime_error("File truncated: Missing Cipher ID.");
-            if (cipherID != 0x02) throw std::runtime_error("Cipher ID mismatch: This file was not encrypted with SM4.");
+            if (cipherID != 0x03) throw std::runtime_error("Cipher ID mismatch: This file was not encrypted with Twofish.");
 
-            
+            // extract salt and iv
             SecByteBlock salt(SALT_SIZE);
             in.read((char*)salt.data(), salt.size());
             if (in.gcount() != SALT_SIZE) throw std::runtime_error("File truncated: Missing salt.");
@@ -101,7 +101,7 @@ bool sm4_cipher(std::string mode, std::string filePath, std::string password) {
             if (in.gcount() != IV_SIZE) throw std::runtime_error("File truncated: Missing IV.");
 
             // re derive the exact key using the extracted salt
-            SecByteBlock key(SM4::DEFAULT_KEYLENGTH);
+            SecByteBlock key(Twofish::MAX_KEYLENGTH);
             Argon2 argon2(Argon2::ARGON2ID);
             argon2.DeriveKey(
                 key, key.size(),
@@ -111,12 +111,13 @@ bool sm4_cipher(std::string mode, std::string filePath, std::string password) {
             );
 
             // decryption object
-            GCM<SM4>::Decryption sm4_dec;
-            sm4_dec.SetKeyWithIV(key, key.size(), iv, iv.size());
-            
-            AuthenticatedDecryptionFilter df(sm4_dec, new FileSink(tempfile.c_str()));
+            EAX<Twofish>::Decryption twofish_dec;
+            twofish_dec.SetKeyWithIV(key, key.size(), iv, iv.size());
+
+            AuthenticatedDecryptionFilter df(twofish_dec, new FileSink(tempfile.c_str()));
             FileSource(in, true, new Redirector(df));
 
+            // only swap files if EAX authenticated successfully
             if(true==df.GetLastResult()) {
                 in.close(); // release file handle before deleting
                 std::remove(filePath.c_str());
@@ -124,20 +125,19 @@ bool sm4_cipher(std::string mode, std::string filePath, std::string password) {
                 std::rename(tempfile.c_str(), filePath.c_str());
                 return true;
             } else {
-                throw::std::runtime_error("\nAuthentication failed.\n");
+                throw::std::runtime_error("\nAuthenticated failed.\n");
             }
         }
     }
 
     catch(Exception& ex) {
         std::cout << "\033[1;31m" << "\nError: Wrong password or Corrupted data.\n";
-		std::cout << ex.what() << "\n";
-		std::cout << "Cannot decrypt." << "\033[0m" << "\n\n";
+        std::cout << ex.what() << "\n";
+        std::cout << "Cannot decrypt." << "\033[0m" << "\n\n";
 
         // remove the tempfile even if decryption failed
         std::remove(tempfile.c_str());
         std::remove(tempfile_hex.c_str());
-
         return false;
     }
 }
