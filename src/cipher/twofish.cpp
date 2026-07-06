@@ -49,7 +49,7 @@ bool twofish_cipher(std::string mode, std::string filePath, std::string password
                 FileSink binarySink(tempfile.c_str());
 
                 // write cipher ID for twofish
-                byte cipherID = 0x04;
+                byte cipherID = 0x03;
                 binarySink.Put(&cipherID, 1);
 
                 // write Salt + IV + Ciphertext into a temporary binary file
@@ -89,7 +89,7 @@ bool twofish_cipher(std::string mode, std::string filePath, std::string password
             byte cipherID = 0;
             in.read((char*)&cipherID, 1);
             if (in.gcount()!=1) throw std::runtime_error("File truncated: Missing Cipher ID.");
-            if (cipherID != 0x04) throw std::runtime_error("Cipher ID mismatch: This file was not encrypted with Twofish.");
+            if (cipherID != 0x03) throw std::runtime_error("Cipher ID mismatch: This file was not encrypted with Twofish.");
 
             // extract salt and iv
             SecByteBlock salt(SALT_SIZE);
