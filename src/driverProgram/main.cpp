@@ -76,7 +76,7 @@ int main() {
 			} else if(select_mode==1) {
 				std::cout << "\n";
 			} else if(select_mode==2) {
-				std::cout << "                              Exit the Program\n";
+				std::cout << "                             Exit the Program\n";
 			}
 
 			ch = getch();
@@ -182,10 +182,10 @@ bool encryptionMode() {
 	std::string filePath = getValidPath();
 
 	const std::vector<std::string> ciphers = {
+		"Aes256-GCM",
 		"SM4-GCM",
-        "XChaCha20Poly1305",
-        "Aes256-GCM",
-        "Twofish-EAX"
+		"Twofish-EAX",
+        "XChaCha20Poly1305"
 	};
 
 	size_t cipher_selection = 0;
@@ -260,10 +260,10 @@ bool encryptionMode() {
     std::cout << "Generated Password >: " << password << "\n";
 
 	// run selected cipher
-	if(cipher_selection==0) sm4_cipher("encrypt", filePath, password);
-	else if(cipher_selection==1) xchacha20_cipher("encrypt", filePath, password);
-	else if(cipher_selection==2) aes_cipher("encrypt", filePath, password);
-	else if(cipher_selection==3) twofish_cipher("encrypt", filePath, password);
+	if(cipher_selection==0) aes_cipher("encrypt", filePath, password);
+	else if(cipher_selection==1) sm4_cipher("encrypt", filePath, password);
+	else if(cipher_selection==2) twofish_cipher("encrypt", filePath, password);
+	else if(cipher_selection==3) xchacha20_cipher("encrypt", filePath, password);
 
 	std::cout << "\n" << BOLD << "Encrypted Successfully" << RESET << "\n";
 	std::cout << BOLD_RED << "CRITICAL: Do not lose your password or you will not recover your data." << RESET << "\n";
@@ -303,10 +303,10 @@ bool decryptionMode() {
 
 	bool success = false;
 
-	if(cipherID=="01") success = sm4_cipher("decrypt", filePath, password);
-	else if(cipherID=="02") success = xchacha20_cipher("decrypt", filePath, password);
-	else if(cipherID=="03") success = aes_cipher("decrypt", filePath, password);
-	else if(cipherID=="04") success = twofish_cipher("decrypt", filePath, password);
+	if(cipherID=="01") success = aes_cipher("decrypt", filePath, password);
+	else if(cipherID=="02") success = sm4_cipher("decrypt", filePath, password);
+	else if(cipherID=="03") success = twofish_cipher("decrypt", filePath, password);
+	else if(cipherID=="04") success = xchacha20_cipher("decrypt", filePath, password);
 	else {
 		std::cout << "\nCannot decrypt. Encryption algorithm not recognized." << "\n\n";
 		std::cout << "Program Terminated.\n\n";
