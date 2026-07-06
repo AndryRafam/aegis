@@ -49,7 +49,7 @@ bool sm4_cipher(std::string mode, std::string filePath, std::string password) {
                 FileSink binarySink(tempfile.c_str());
 
                 // write cipher ID for SM4
-                byte cipherID = 0x01;
+                byte cipherID = 0x02;
                 binarySink.Put(&cipherID, 1);
 
                 // write Salt + IV + Ciphertext into a temporary binary file
@@ -89,7 +89,7 @@ bool sm4_cipher(std::string mode, std::string filePath, std::string password) {
             byte cipherID = 0;
             in.read((char*)&cipherID, 1);
             if (in.gcount()!=1) throw std::runtime_error("File truncated: Missing Cipher ID.");
-            if (cipherID != 0x01) throw std::runtime_error("Cipher ID mismatch: This file was not encrypted with SM4.");
+            if (cipherID != 0x02) throw std::runtime_error("Cipher ID mismatch: This file was not encrypted with SM4.");
 
             
             SecByteBlock salt(SALT_SIZE);
