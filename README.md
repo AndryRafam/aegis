@@ -6,11 +6,11 @@
 
 **Earlier release v1.4 to v1.6 is available here:** https://gitlab.com/AndryRafam/neptunecrypt/-/releases
 
-<h3 align="left"> Generate Password </h3>
+<h4 align="left"> Generate Password </h4>
 
 ![](output/automatic.gif)
 
-<h3 align="left"> Manual Password </h3>
+<h4 align="left"> Manual Password </h4>
 
 ![](output/manual.gif)
 
@@ -21,10 +21,10 @@ The software was built with C++ (std=23) and cryptopp-modern: https://cryptopp-m
 
 <h2 align="left"> About the cipher </h2>
 
-- XChaCha20Poly1305: https://en.wikipedia.org/wiki/ChaCha20-Poly1305
-- SM4-GCM (ShāngMì 4): https://en.wikipedia.org/wiki/SM4_(cipher)
 - Aes256-GCM (orginal name Rijndael): https://en.wikipedia.org/wiki/Advanced_Encryption_Standard
+- SM4-GCM (ShāngMì 4): https://en.wikipedia.org/wiki/SM4_(cipher)
 - Twofish-EAX (aes competition runner up by Bruce Schneier): https://en.wikipedia.org/wiki/Twofish
+- XChaCha20Poly1305: https://en.wikipedia.org/wiki/ChaCha20-Poly1305
 
 <h2 align="left"> Tools and Requierments for building and debugging </h2>
 
