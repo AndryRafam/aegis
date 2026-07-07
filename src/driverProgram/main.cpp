@@ -203,6 +203,13 @@ bool encryptionMode() {
         "XChaCha20Poly1305"
 	};
 
+	const std::vector<std::string> about_ciphers = {
+		"Original name Rijndael. Winner of the AES contest.",
+		"ShāngMì 4 - Standardised for commercial cryptography in China.",
+		"AES contest finalist developed by Bruce Schneier.",
+		"Extended version of ChaCha20."
+	};
+
 	size_t cipher_selection = 0;
 	int action_selection = 0; // 0 = proceed, 1 = go back
 	char ch;
@@ -230,7 +237,7 @@ bool encryptionMode() {
 
 		std::cout << "\n\033[K";
 		if(action_selection==1) std::cout << "                 Back to Main Menu\n";
-		else std::cout << "\n";
+		else std::cout << " " << about_ciphers[cipher_selection] << "\n";
 
 		ch = getch();
 
