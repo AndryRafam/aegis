@@ -7,11 +7,11 @@
 
 NeptuneCrypt is a lightweight CLI encryption software using XChaCha20Poly1305, SM4-GCM, Aes-256-GCM and Twofish-EAX as cipher for simple encryption and Argon2id for key derivation function (secure password hashing). The software was built with C++ (std=23) and cryptopp-modern: https://cryptopp-modern.com/. The user can choose between generating a random password or enter manually a custom password.
 
-<h2 align="left"> About the cipher </h2>
+<h2 align="left"> Supported Ciphers </h2>
 
 - Aes256-GCM (orginal name Rijndael): https://en.wikipedia.org/wiki/Advanced_Encryption_Standard
 - SM4-GCM (ShāngMì 4): https://en.wikipedia.org/wiki/SM4_(cipher)
-- Twofish-EAX (aes competition runner up by Bruce Schneier): https://en.wikipedia.org/wiki/Twofish
+- Twofish-EAX (Aes contest runner up developped by Bruce Schneier): https://en.wikipedia.org/wiki/Twofish
 - XChaCha20Poly1305: https://en.wikipedia.org/wiki/ChaCha20-Poly1305
 
 <h2 align="left"> Tools and Requierments for building and debugging </h2>
