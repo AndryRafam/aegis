@@ -8,7 +8,7 @@
 
 <h2 algin="left"> About </h2>
 
-NeptuneCrypt is a lightweight CLI encryption software using XChaCha20Poly1305, SM4-GCM, Aes-256-GCM and Twofish-EAX as cipher for simple encryption and Argon2id for key derivation function (secure password hashing). The software was built with C++ (std=23) and cryptopp-modern: https://cryptopp-modern.com/. The user can choose between generating a random password or enter manually a custom password.
+NeptuneCrypt is a lightweight TUI (text based user interface) encryption software using XChaCha20Poly1305, SM4-GCM, Aes-256-GCM and Twofish-EAX as cipher for simple encryption and Argon2id for key derivation function (secure password hashing). The software was built with C++ (std=23) and cryptopp-modern: https://cryptopp-modern.com/. The user can choose between generating a random password or enter manually a custom password.
 
 <h2 align="left"> Supported Ciphers </h2>
 
