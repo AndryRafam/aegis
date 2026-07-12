@@ -16,7 +16,7 @@
 
 constexpr std::string_view RESET = "\033[0m";
 // constexpr std::string_view HIGHLIGHT = "\033[7m";
-constexpr std::string_view HIGHLIGHT = "\033[30;46m";
+constexpr std::string_view HIGHLIGHT = "\033[30;44m";
 constexpr std::string_view BOLD = "\033[1m";
 constexpr std::string_view BOLD_RED = "\033[1;31m";
 
@@ -25,7 +25,9 @@ namespace fs = std::filesystem;
 enum class AppMode {
 	Encrypt,
 	Decrypt,
-	Exit
+	Exit,
+	Proceed,
+	Go_Back
 };
 
 // forward declaration
@@ -58,23 +60,23 @@ int main() {
 
 			// line encrypt
 			if(select_mode==AppMode::Encrypt) {
-				std::cout << "  " << HIGHLIGHT << "< ENCRYPT >" << RESET << " ";
+				std::cout << "  " << HIGHLIGHT << BOLD << "< ENCRYPT >" << RESET << " ";
 			} else {
-				std::cout << "  < ENCRYPT > ";
+				std::cout << BOLD << "  < ENCRYPT > " << RESET;
 			}
 
 			// line decrypt
 			if(select_mode==AppMode::Decrypt) {
-				std::cout << "  " << HIGHLIGHT << "< DECRYPT >" << RESET << " ";
+				std::cout << "  " << HIGHLIGHT << BOLD << "< DECRYPT >" << RESET << " ";
 			} else {
-				std::cout << "  < DECRYPT > ";
+				std::cout << BOLD << "  < DECRYPT > " << RESET;
 			}
 
 			// line exit
 			if(select_mode==AppMode::Exit) {
-				std::cout << "  " << HIGHLIGHT << "< EXIT >" << RESET << "\n";
+				std::cout << "  " << HIGHLIGHT << BOLD << "< EXIT >" << RESET << "\n";
 			} else {
-				std::cout << "  < EXIT >\n";
+				std::cout << BOLD << "  < EXIT >" << RESET << "\n";
 			}
 
 			// Dynamic description Line
@@ -207,6 +209,7 @@ void secure_clear(std::string& s) {
 bool encryptionMode() {
 	clearScreen();
 	std::cout << BOLD << "Enrolling Encryption Mode" << RESET << std::endl;
+	std::cout << BOLD << "=========================" << RESET << "\n\n";
 	std::string filePath = getValidPath();
 
 	const std::vector<std::string> ciphers = {
@@ -224,7 +227,7 @@ bool encryptionMode() {
 	};
 
 	size_t cipher_selection = 0;
-	int action_selection = 0; // 0 = proceed, 1 = go back
+	AppMode action_selection = AppMode::Proceed; // start with proceed
 	char ch;
 
 	std::cout << "\033[?25l"; // hide cursor
@@ -235,21 +238,21 @@ bool encryptionMode() {
 
 		for(size_t i = 0; i < ciphers.size(); ++i) {
 			if (cipher_selection == i) {
-                std::cout << "  > " << HIGHLIGHT << ciphers[i] << RESET << "\n";
+                std::cout << "  > " << HIGHLIGHT << BOLD << ciphers[i] << RESET << "\n";
             } else {
-                std::cout << "    " << ciphers[i] << "\n";
+                std::cout << "    " << BOLD << ciphers[i] << RESET << "\n";
             }
 		}
 
 		std::cout << "\n";
-		if(action_selection==0) std::cout << "    " << HIGHLIGHT << "< PROCEED >" << RESET << "  ";
-		else std::cout << "    < PROCEED >  ";
+		if(action_selection==AppMode::Proceed) std::cout << "    " << HIGHLIGHT << BOLD << "< PROCEED >" << RESET << "  ";
+		else std::cout << BOLD << "    < PROCEED >  " << RESET;
 
-		if(action_selection==1) std::cout << "  " << HIGHLIGHT << "< GO BACK >" << RESET << "\n";
-		else std::cout << "  < GO BACK >\n";
+		if(action_selection==AppMode::Go_Back) std::cout << "  " << HIGHLIGHT << BOLD << "< GO BACK >" << RESET << "\n";
+		else std::cout << BOLD << "  < GO BACK >" << RESET << "\n";
 
 		std::cout << "\n\033[K";
-		if(action_selection==1) std::cout << "                 Back to Main Menu\n";
+		if(action_selection==AppMode::Go_Back) std::cout << "                 Back to Main Menu\n";
 		else std::cout << " " << about_ciphers[cipher_selection] << "\n";
 
 		ch = getch();
@@ -263,15 +266,17 @@ bool encryptionMode() {
                 case 'B': // Down arrow
                     cipher_selection = (cipher_selection == ciphers.size() - 1) ? 0 : cipher_selection + 1; 
                     break;
-                case 'D': // Left arrow
-                    action_selection = (action_selection == 0) ? 1 : action_selection - 1;
+                case 'D': // Left arrow (wrap around logic)
+                    if(action_selection==AppMode::Proceed) action_selection = AppMode::Go_Back;
+					else if(action_selection==AppMode::Go_Back) action_selection = AppMode::Proceed;
                     break;
-                case 'C': // Right arrow
-                    action_selection = (action_selection == 1) ? 0 : action_selection + 1;
+                case 'C': // Right arrow (wrap around logic)
+                    if(action_selection==AppMode::Go_Back) action_selection = AppMode::Proceed;
+					else if(action_selection==AppMode::Proceed) action_selection = AppMode::Go_Back;
                     break;
 			}
 		} else if(ch==10) {
-			if(action_selection==1) {
+			if(action_selection==AppMode::Go_Back) {
 				std::cout << "\033[?25h";
 				return true; // go back to main menu loop
 			}
@@ -341,6 +346,7 @@ bool encryptionMode() {
 bool decryptionMode() {
 	clearScreen();
 	std::cout << BOLD << "Enrolling Decryption Mode" << RESET << std::endl;
+	std::cout << BOLD << "=========================" << RESET << "\n\n";
 	std::string filePath = getValidPath();
 
 	std::ifstream file(filePath, std::ios::binary);
