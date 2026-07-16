@@ -15,20 +15,21 @@
 #include "../password/set_echo.hpp"
 
 constexpr std::string_view RESET = "\033[0m";
-// constexpr std::string_view HIGHLIGHT = "\033[7m";
-constexpr std::string_view HIGHLIGHT = "\033[30;44m";
+constexpr std::string_view HIGHLIGHT = "\033[7m";
+// constexpr std::string_view HIGHLIGHT = "\033[30;44m";
 constexpr std::string_view BOLD = "\033[1m";
 constexpr std::string_view BOLD_RED = "\033[1;31m";
 
 namespace fs = std::filesystem;
 
 enum class AppMode {
-	Encrypt,
-	Decrypt,
 	Exit,
 	Proceed,
 	Go_Back
 };
+
+// global variable
+AppMode action_selection;
 
 // forward declaration
 void about();
@@ -49,42 +50,43 @@ int main() {
 	while(true) {
 		clearScreen();
 
-		AppMode select_mode = AppMode::Encrypt; // start with encrypt mode highligthed by default
+		action_selection = AppMode::Proceed; // start with proceed by default
+		const std::vector<std::string> mode = {
+			"Encrypt",
+			"Decrypt"
+		};
+
+		size_t mode_selection = 0;
+
 		char ch;
 
 		std::cout << "\033[?25l"; // hide cursor
 
-		// part of code to interact with the mode choice: encrypt, decrypt or quit.
+		// part of code to interact with the mode choice: encrypt or decrypt
 		while (true) {
-			std::cout << "Choose mode using left/right key arrows and press enter:\n";
+			std::cout << "Select mode and choose < Proceed > using key arrows:\n";
 
-			// line encrypt
-			if(select_mode==AppMode::Encrypt) {
-				std::cout << "  " << HIGHLIGHT << BOLD << "< ENCRYPT >" << RESET << " ";
-			} else {
-				std::cout << BOLD << "  < ENCRYPT > " << RESET;
+			for(size_t i = 0; i < mode.size(); ++i) {
+				if(mode_selection == i) {
+					std::cout << "  > " << HIGHLIGHT << BOLD << mode[i] << RESET << "\n";
+				} else {
+					std::cout << "    " << BOLD << mode[i] << RESET << "\n";
+				}
 			}
 
-			// line decrypt
-			if(select_mode==AppMode::Decrypt) {
-				std::cout << "  " << HIGHLIGHT << BOLD << "< DECRYPT >" << RESET << " ";
-			} else {
-				std::cout << BOLD << "  < DECRYPT > " << RESET;
-			}
+			std::cout << "\n";
+			if(action_selection==AppMode::Proceed) std::cout << "   " << HIGHLIGHT << BOLD << "< Proceed >" << RESET << "  ";
+			else std::cout << BOLD << "   < Proceed >  " << RESET;
 
-			// line exit
-			if(select_mode==AppMode::Exit) {
-				std::cout << "  " << HIGHLIGHT << BOLD << "< EXIT >" << RESET << "\n";
-			} else {
-				std::cout << BOLD << "  < EXIT >" << RESET << "\n";
-			}
+			if(action_selection==AppMode::Exit) std::cout << "  " << HIGHLIGHT << BOLD << "< Exit >" << RESET << "\n";
+			else std::cout << BOLD << "  < Exit >" << RESET << "\n";
 
 			// Dynamic description Line
 			std::cout << "\n"; // 1. add an extra empty line
 			std::cout << "\033[K"; // 2. clear the line to prevent "ghost text"
-			if(select_mode==AppMode::Exit) {
-				std::cout << "                             Exit the Program\n";
-			} else {
+			if(action_selection==AppMode::Exit) {
+				std::cout << "                Exit the program\n";
+			} else  {
 				std::cout << "\n";
 			}
 
@@ -92,38 +94,41 @@ int main() {
 
 			if(ch==27) { // ascii value for escape
 				getch(); // discard the intermediate '[' character
-				switch (getch()) { // read the final arrow character ('A' or 'B') directly
+				switch (getch()) {
+					case 'A':
+						mode_selection = (mode_selection==0) ? mode.size()-1 : mode_selection-1;
+						break;
+					case 'B':
+						mode_selection = (mode_selection==mode.size()-1) ? 0 : mode_selection+1;
+						break;
 					case 'D': // left arrow (wrap around logic)
-						if(select_mode==AppMode::Encrypt) select_mode = AppMode::Exit;
-						else if(select_mode==AppMode::Decrypt) select_mode = AppMode::Encrypt;
-						else if(select_mode==AppMode::Exit) select_mode = AppMode::Decrypt;
+						if(action_selection==AppMode::Proceed) action_selection = AppMode::Exit;
+						else if(action_selection==AppMode::Exit) action_selection = AppMode::Proceed;
 						break;
 					case 'C': // right arrow (wrap around logic)
-						if(select_mode==AppMode::Encrypt) select_mode = AppMode::Decrypt;
-						else if(select_mode==AppMode::Decrypt) select_mode = AppMode::Exit;
-						else if(select_mode==AppMode::Exit) select_mode = AppMode::Encrypt; 
+						if(action_selection==AppMode::Exit) action_selection = AppMode::Proceed;
+						else if(action_selection==AppMode::Proceed) action_selection = AppMode::Exit;
 						break;
 				}
 			} else if(ch==10) {
+				if(action_selection==AppMode::Exit) {
+					clearScreen();
+					std::cout << "Program Terminated.\n\n";
+					std::cout << "\033[?25h"; // restore cursor
+					return 0;
+				}
 				break; // enter key
 			}
 
-			// move 4 lines to redraw seamlessly
-			std::cout << "\033[4A"; 
+			// redraw seamlessly
+			std::cout << "\033[" << mode.size()+5 << "A"; 
 		}
 
 		std::cout << "\033[?25h"; // restore cursor
 
-		// if the user choice is "Exit", exit the program immediately
-		if(select_mode==AppMode::Exit) {
-			clearScreen();
-			std::cout << "Program Terminated.\n\n";
-			return 0; // exit main function right here
-		}
-
-		if(select_mode==AppMode::Encrypt) {
+		if(mode_selection==0) {
 			if(!encryptionMode()) return 0;
-		} else if(select_mode==AppMode::Decrypt) {
+		} else if(mode_selection==1) {
 			if(!decryptionMode()) return 0;
 		}
 	}
@@ -134,7 +139,7 @@ int main() {
 /*================================================================*/
 
 void about() {
-	const std::string aboutText = R"( NeptuneCrypt 1.6.2, Encryption Software, June 2026
+	const std::string aboutText = R"( NeptuneCrypt 1.6.3, Encryption Software, June 2026
  Andry RAFAM ANDRIANJAFY <andryrafam@protonmail.com>
  https://github.com/andryrafam
 
@@ -227,7 +232,7 @@ bool encryptionMode() {
 	};
 
 	size_t cipher_selection = 0;
-	AppMode action_selection = AppMode::Proceed; // start with proceed
+	action_selection = AppMode::Proceed; // start with proceed
 	char ch;
 
 	std::cout << "\033[?25l"; // hide cursor
@@ -245,11 +250,11 @@ bool encryptionMode() {
 		}
 
 		std::cout << "\n";
-		if(action_selection==AppMode::Proceed) std::cout << "    " << HIGHLIGHT << BOLD << "< PROCEED >" << RESET << "  ";
-		else std::cout << BOLD << "    < PROCEED >  " << RESET;
+		if(action_selection==AppMode::Proceed) std::cout << "    " << HIGHLIGHT << BOLD << "< Proceed >" << RESET << "  ";
+		else std::cout << BOLD << "    < Proceed >  " << RESET;
 
-		if(action_selection==AppMode::Go_Back) std::cout << "  " << HIGHLIGHT << BOLD << "< GO BACK >" << RESET << "\n";
-		else std::cout << BOLD << "  < GO BACK >" << RESET << "\n";
+		if(action_selection==AppMode::Go_Back) std::cout << "  " << HIGHLIGHT << BOLD << "< Go Back >" << RESET << "\n";
+		else std::cout << BOLD << "  < Go Back >" << RESET << "\n";
 
 		std::cout << "\n\033[K";
 		if(action_selection==AppMode::Go_Back) std::cout << "                 Back to Main Menu\n";
@@ -288,7 +293,6 @@ bool encryptionMode() {
 	std::cout << "\033[?25h"; // restore cursor
 
 	// initialize random number for password legnth [16,32]
-	// Initialize random number for password length [16,32]
     static std::random_device rd;
     static std::mt19937 gen(rd());
     std::uniform_int_distribution<int> distrib(16, 32);
@@ -332,8 +336,8 @@ bool encryptionMode() {
 	secure_clear(password);
 	secure_clear(confirm_password);
 
-	std::cout << "\n" << BOLD << "Encrypted Successfully" << RESET << "\n";
-	std::cout << BOLD_RED << "CRITICAL: Do not lose your password or you will not recover your data." << RESET << "\n\n";
+	std::cout << "\n" << "Encrypted Successfully" << "\n";
+	std::cout << BOLD_RED << "Warning: " << RESET << BOLD << "Do not lose your password or you will not recover your data." << RESET << "\n\n";
 
 	if(askToContinue()) return true;
 
@@ -386,7 +390,7 @@ bool decryptionMode() {
 	// wipe password contents
 	secure_clear(password);
 
-	if(success) std::cout << "\n" << BOLD << "Decrypted Successfully" << RESET << "\n";
+	if(success) std::cout << "\n" << "Decrypted Successfully" << "\n";
 	if(askToContinue()) return true;
 
 	clearScreen();
