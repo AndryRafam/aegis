@@ -28,6 +28,7 @@ NeptuneCrypt is a lightweight TUI (text user interface) encryption software usin
 <h2 align="left"> Build and install on Linux (Debian, Fedora) </h2>
 <h3 align="left"> CMake </h3>
 To build and install using cmake, type the following command in terminal. The executable file will be installed at /usr/local/bin/ directory.
+
 Create and enter a temporary build directory
 
 ```json
