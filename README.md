@@ -49,6 +49,12 @@ To run on Linux, type the following command anywhere in terminal
 ```json
 $ neptune
 ```
+<h3 align="left"> Makefile </h3>
+To build and install using makefile, type the following command in terminal. The executable file will be installed at /usr/local/bin/ directory.
+
+```json
+$ sudo make
+```
 <h2 align="left"> Cleaning up </h2>
 <h3 align="left"> CMake </h3>
 
@@ -60,6 +66,12 @@ To purge the installed binary from /usr/local/bin, run:
 ```json
 $ sudo rm -f /usr/local/bin/neptune
 ```
+<h3 align="left"> Makefile </h3>
+To purge the installed binary from /usr/local/bin, run:
+```json
+$ sudo make clean
+```json
+
 <h2 align="left"> How to encrypt folders ? </h2>
 
 To encrypt folder, first compress/archive the folder (.7z, .zip, .rar, .tar etc.) and then encrypt.
