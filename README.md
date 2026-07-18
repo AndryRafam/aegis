@@ -68,6 +68,7 @@ $ sudo rm -f /usr/local/bin/neptune
 ```
 <h3 align="left"> Makefile </h3>
 To purge the installed binary from /usr/local/bin, run:
+
 ```json
 $ sudo make clean
 ```json
