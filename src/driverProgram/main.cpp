@@ -28,6 +28,12 @@ enum class AppMode {
 	Go_Back
 };
 
+static std::mt19937& get_prng() {
+	static std::random_device rd;
+	static std::mt19937 gen(rd());
+	return gen;
+}
+
 // global variable
 AppMode action_selection;
 
@@ -35,8 +41,7 @@ AppMode action_selection;
 void about();
 std::string getValidPath();
 char getch();
-bool askToContinue();
-bool askManually(); // ask to input password manually
+bool askYN(std::string prompt);
 void clearScreen();
 void secure_clear(std::string& s); // wipe string contents
 bool encryptionMode();
@@ -102,12 +107,8 @@ int main() {
 						mode_selection = (mode_selection==mode.size()-1) ? 0 : mode_selection+1;
 						break;
 					case 'D': // left arrow (wrap around logic)
-						if(action_selection==AppMode::Proceed) action_selection = AppMode::Exit;
-						else if(action_selection==AppMode::Exit) action_selection = AppMode::Proceed;
-						break;
 					case 'C': // right arrow (wrap around logic)
-						if(action_selection==AppMode::Exit) action_selection = AppMode::Proceed;
-						else if(action_selection==AppMode::Proceed) action_selection = AppMode::Exit;
+						action_selection = (action_selection==AppMode::Proceed) ? AppMode::Exit : AppMode::Proceed;
 						break;
 				}
 			} else if(ch==10) {
@@ -139,12 +140,12 @@ int main() {
 /*================================================================*/
 
 void about() {
-	const std::string aboutText = R"( NeptuneCrypt 1.6.3, Encryption Software, June 2026
+	const std::string aboutText = R"( Aegis, Encryption Software, June 2026
  Andry RAFAM ANDRIANJAFY <andryrafam@protonmail.com>
- https://github.com/andryrafam
-
- NeptuneCrypt is free software, and
- comes with ABSOLUTELY NO WARRANTY.
+ https://github.com/andryrafam                           
+                                                            
+ Aegis is free software, and                       
+ comes with ABSOLUTELY NO WARRANTY.  
 )";
 	std::cout << aboutText << std::endl;
 }
@@ -173,24 +174,10 @@ char getch() {
     return ch;
 }
 
-bool askToContinue() {
+bool askYN(std::string prompt) {
 	char yn; // [y/n]
 	while(true) {
-		std::cout << "Continue ? [Y/n] >: ";
-		if(!(std::cin >> yn)) return false; // safely check for EOF/Ctrl+D
-		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-		if(yn=='y' || yn=='Y') return true;
-		if(yn=='n' || yn=='N') return false;
-		std::cout << "Invalid input. Only [y/n].\n"; // invalid input try again
-	}
-}
-
-// ask to input password manually
-bool askManually() {
-	char yn; // [y/n]
-	while(true) {
-		std::cout << "Input password manually ? [Y/n] >: ";
+		std::cout << prompt << " [Y/n] >: ";
 		if(!(std::cin >> yn)) return false; // safely check for EOF/Ctrl+D
 		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
@@ -235,74 +222,70 @@ bool encryptionMode() {
 	action_selection = AppMode::Proceed; // start with proceed
 	char ch;
 
-	std::cout << "\033[?25l"; // hide cursor
+	if(askYN("Choose cipher randomly ?")) {
+		std::uniform_int_distribution<size_t> distribution(0, ciphers.size() - 1);
+        cipher_selection = distribution(get_prng());
+	}
+	else {
+		std::cout << "\033[?25l"; // hide cursor
 
-	// select cipher interactive loop
-	while(true) {
-		std::cout << "\nSelect cipher and choose < Proceed > using key arrows:\n";
+		// select cipher interactive loop
+		while(true) {
+			std::cout << "\nSelect cipher and choose < Proceed > using key arrows:\n";
 
-		for(size_t i = 0; i < ciphers.size(); ++i) {
-			if (cipher_selection == i) {
-                std::cout << "  > " << HIGHLIGHT << BOLD << ciphers[i] << RESET << "\n";
-            } else {
-                std::cout << "    " << BOLD << ciphers[i] << RESET << "\n";
-            }
-		}
-
-		std::cout << "\n";
-		if(action_selection==AppMode::Proceed) std::cout << "    " << HIGHLIGHT << BOLD << "< Proceed >" << RESET << "  ";
-		else std::cout << BOLD << "    < Proceed >  " << RESET;
-
-		if(action_selection==AppMode::Go_Back) std::cout << "  " << HIGHLIGHT << BOLD << "< Go Back >" << RESET << "\n";
-		else std::cout << BOLD << "  < Go Back >" << RESET << "\n";
-
-		std::cout << "\n\033[K";
-		if(action_selection==AppMode::Go_Back) std::cout << "                 Back to Main Menu\n";
-		else std::cout << " " << about_ciphers[cipher_selection] << "\n";
-
-		ch = getch();
-
-		if(ch==27) {
-			getch();
-			switch(getch()) {
-				case 'A': // Up arrow
-                    cipher_selection = (cipher_selection == 0) ? ciphers.size() - 1 : cipher_selection - 1;
-                    break;
-                case 'B': // Down arrow
-                    cipher_selection = (cipher_selection == ciphers.size() - 1) ? 0 : cipher_selection + 1; 
-                    break;
-                case 'D': // Left arrow (wrap around logic)
-                    if(action_selection==AppMode::Proceed) action_selection = AppMode::Go_Back;
-					else if(action_selection==AppMode::Go_Back) action_selection = AppMode::Proceed;
-                    break;
-                case 'C': // Right arrow (wrap around logic)
-                    if(action_selection==AppMode::Go_Back) action_selection = AppMode::Proceed;
-					else if(action_selection==AppMode::Proceed) action_selection = AppMode::Go_Back;
-                    break;
+			for(size_t i = 0; i < ciphers.size(); ++i) {
+				if (cipher_selection == i) {
+                	std::cout << "  > " << HIGHLIGHT << BOLD << ciphers[i] << RESET << "\n";
+            	} else {
+                	std::cout << "    " << BOLD << ciphers[i] << RESET << "\n";
+            	}
 			}
-		} else if(ch==10) {
-			if(action_selection==AppMode::Go_Back) {
-				std::cout << "\033[?25h";
-				return true; // go back to main menu loop
+
+			std::cout << "\n";
+			if(action_selection==AppMode::Proceed) std::cout << "    " << HIGHLIGHT << BOLD << "< Proceed >" << RESET << "  ";
+			else std::cout << BOLD << "    < Proceed >  " << RESET;
+
+			if(action_selection==AppMode::Go_Back) std::cout << "  " << HIGHLIGHT << BOLD << "< Go Back >" << RESET << "\n";
+			else std::cout << BOLD << "  < Go Back >" << RESET << "\n";
+
+			std::cout << "\n\033[K";
+			if(action_selection==AppMode::Go_Back) std::cout << "                 Back to Main Menu\n";
+			else std::cout << " " << about_ciphers[cipher_selection] << "\n";
+
+			ch = getch();
+
+			if(ch==27) {
+				getch();
+				switch(getch()) {
+					case 'A': // Up arrow
+                    	cipher_selection = (cipher_selection == 0) ? ciphers.size() - 1 : cipher_selection - 1;
+                    	break;
+                	case 'B': // Down arrow
+                    	cipher_selection = (cipher_selection == ciphers.size() - 1) ? 0 : cipher_selection + 1; 
+                    	break;
+                	case 'D': // Left arrow (wrap around logic)
+                	case 'C': // Right arrow (wrap around logic)
+                   		action_selection = (action_selection==AppMode::Proceed) ? AppMode::Go_Back : AppMode::Proceed;
+                    	break;
+				}
+			} else if(ch==10) {
+				if(action_selection==AppMode::Go_Back) {
+					std::cout << "\033[?25h";
+					return true; // go back to main menu loop
+				}
+				break;
 			}
-			break;
+			std::cout << "\033[" << ciphers.size() + 6 << "A"; // Redraw menu dynamically
 		}
-		std::cout << "\033[" << ciphers.size() + 6 << "A"; // Redraw menu dynamically
 	}
 
 	std::cout << "\033[?25h"; // restore cursor
 
-	// initialize random number for password legnth [16,32]
-    static std::random_device rd;
-    static std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> distrib(16, 32);
     std::string password, confirm_password;
-
     clearScreen();
-    std::string cipherName = ciphers[cipher_selection];
-    std::cout << BOLD << cipherName << " Cipher Selected" << RESET << "\n\n";
+    std::cout << BOLD << ciphers[cipher_selection] << " Cipher Selected" << RESET << "\n\n";
 
-	if(askManually()) {
+	if(askYN("Input password manually ?")) {
 		while(true) {
 			std::cout << "Password >: ";
 			setEcho(false);
@@ -322,7 +305,8 @@ bool encryptionMode() {
 		}
 	}
 	else {
-		password = generatePassword(distrib(gen));
+		std::uniform_int_distribution<int> distrib(16,32);
+		password = generatePassword(distrib(get_prng()));
 		std::cout << "Generated Password >: " << password << "\n";
 	}
 
@@ -339,7 +323,7 @@ bool encryptionMode() {
 	std::cout << "\n" << "Encrypted Successfully" << "\n";
 	std::cout << BOLD_RED << "Warning: " << RESET << BOLD << "Do not lose your password or you will not recover your data." << RESET << "\n\n";
 
-	if(askToContinue()) return true;
+	if(askYN("Continue ?")) return true;
 
 	clearScreen();
 	std::cout << "Program Terminated.\n\n";
@@ -356,7 +340,7 @@ bool decryptionMode() {
 	std::ifstream file(filePath, std::ios::binary);
 	if(!file) {
 		std::cout << "\nError opening file for reading.\n";
-		if(askToContinue()) return true;
+		if(askYN("Continue ?")) return true;
 		return false;
 	}
 
@@ -391,7 +375,7 @@ bool decryptionMode() {
 	secure_clear(password);
 
 	if(success) std::cout << "\n" << "Decrypted Successfully" << "\n";
-	if(askToContinue()) return true;
+	if(askYN("Continue ?")) return true;
 
 	clearScreen();
 	std::cout << "Program Terminated.\n\n";
