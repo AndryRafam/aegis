@@ -27,21 +27,21 @@ LDFLAGS = -L/usr/local/lib -lcryptopp -lpthread #= -lcryptopp -lpthread
 #LDLIBS = -lcryptopp -lpthread
 
 
-neptune: $(obj)
+aegis: $(obj)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
 
 # install
-install: neptune
+install: aegis
 	mkdir -p /usr/local/bin
-	cp -f neptune /usr/local/bin/neptune
+	cp -f aegis /usr/local/bin/aegis
 
 		
 -include $(deps)
 
 .PHONY: clean
 clean:
-	rm -f /usr/local/bin/neptune
-	rm -f $(obj) $(deps) neptune
+	rm -f /usr/local/bin/aegis
+	rm -f $(obj) $(deps) aegis
 
 
