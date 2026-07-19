@@ -2,7 +2,7 @@
 [![Debian](https://img.shields.io/badge/Debian-A81D33?logo=debian&logoColor=fff)](#)
 [![Fedora](https://img.shields.io/badge/Fedora-51A2DA?logo=fedora&logoColor=fff)](#)
 
-<h1 align="left"> Aegis </h1>
+<h1 align="left"> Aegis (formerly NeptuneCrypt) </h1>
 
 <h2 algin="left"> About </h2>
 
