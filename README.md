@@ -2,13 +2,11 @@
 [![Debian](https://img.shields.io/badge/Debian-A81D33?logo=debian&logoColor=fff)](#)
 [![Fedora](https://img.shields.io/badge/Fedora-51A2DA?logo=fedora&logoColor=fff)](#)
 
-<h1 align="left"> NeptuneCrypt </h1>
-
-![](output/1.6.3.gif)
+<h1 align="left"> Aegis </h1>
 
 <h2 algin="left"> About </h2>
 
-NeptuneCrypt is a lightweight TUI (text user interface) encryption software using Aes-256-GCM, SM4-GCM, Twofish-EAX and  XChaCha20Poly1305 as cipher for simple encryption and Argon2id for key derivation function (secure password hashing). The software was built with C++ (std=23) and cryptopp-modern: https://cryptopp-modern.com/. The user can choose between generating a random password or enter manually a custom password.
+Aegis is a lightweight TUI (text user interface) encryption software using Aes-256-GCM, SM4-GCM, Twofish-EAX and  XChaCha20Poly1305 as cipher for simple encryption and Argon2id for key derivation function (secure password hashing). The software was built with C++ (std=23) and cryptopp-modern: https://cryptopp-modern.com/. The user can choose between generating a random password or enter manually a custom password.
 
 <h2 align="left"> Supported Ciphers </h2>
 
@@ -28,7 +26,6 @@ NeptuneCrypt is a lightweight TUI (text user interface) encryption software usin
 <h2 align="left"> Build and install on Linux (Debian, Fedora) </h2>
 <h3 align="left"> CMake </h3>
 To build and install using cmake, type the following command in terminal. The executable file will be installed at /usr/local/bin/ directory.
-
 Create and enter a temporary build directory
 
 ```json
@@ -39,7 +36,7 @@ Compile the executable
 ```json
 $ cmake --build build
 ```
-Install 'neptune' straight to /usr/local/bin
+Install 'aegis' straight to /usr/local/bin
 
 ```json
 $ sudo cmake --install build
@@ -47,13 +44,7 @@ $ sudo cmake --install build
 To run on Linux, type the following command anywhere in terminal
 
 ```json
-$ neptune
-```
-<h3 align="left"> Makefile </h3>
-To build and install using makefile, type the following command in terminal. The executable file will be installed at /usr/local/bin/ directory.
-
-```json
-$ sudo make
+$ aegis
 ```
 <h2 align="left"> Cleaning up </h2>
 <h3 align="left"> CMake </h3>
@@ -64,20 +55,13 @@ $ rm -rf build/
 To purge the installed binary from /usr/local/bin, run:
 
 ```json
-$ sudo rm -f /usr/local/bin/neptune
+$ sudo rm -f /usr/local/bin/aegis
 ```
-<h3 align="left"> Makefile </h3>
-To purge the installed binary from /usr/local/bin, run:
-
-```json
-$ sudo make clean
-```
-
 <h2 align="left"> How to encrypt folders ? </h2>
 
 To encrypt folder, first compress/archive the folder (.7z, .zip, .rar, .tar etc.) and then encrypt.
 
 <h2 align="left"> Acknowledgement </h2>
 
-NeptuneCrypt is free software and comes with absolutely no warranty. This software is intended for personal use and educational use only. It is not suitable for industrial/professional use.
+Aegis is free software and comes with absolutely no warranty. This software is intended for personal use and educational use only. It is not suitable for industrial/professional use.
 
