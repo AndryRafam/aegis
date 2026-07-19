@@ -4,7 +4,7 @@
 
 <h1 align="left"> Aegis (formerly NeptuneCrypt) </h1>
 
-![](output/1.6.4.gif)
+![](output/1.6.4.png)
 
 <h2 algin="left"> About </h2>
 
