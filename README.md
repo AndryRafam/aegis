@@ -52,7 +52,11 @@ To build and install using cmake, type the following command in terminal. The ex
 ```json
 $ sudo make
 ```
+To run on Linux, type the following command anywhere in terminal
 
+```json
+$ aegis
+```
 <h2 align="left"> Cleaning up </h2>
 <h3 align="left"> CMake </h3>
 
