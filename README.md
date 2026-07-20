@@ -46,6 +46,13 @@ To run on Linux, type the following command anywhere in terminal
 ```json
 $ aegis
 ```
+<h3 align="left"> Makefile </h3>
+To build and install using cmake, type the following command in terminal. The executable file will be installed at /usr/local/bin/ directory.
+
+```json
+$ sudo make
+```
+
 <h2 align="left"> Cleaning up </h2>
 <h3 align="left"> CMake </h3>
 
@@ -56,6 +63,12 @@ To purge the installed binary from /usr/local/bin, run:
 
 ```json
 $ sudo rm -f /usr/local/bin/aegis
+```
+<h3 align="left"> Makefile </h3>
+To purge the installed binary from /usr/local/bin, run:
+
+```json
+$ sudo make clean
 ```
 <h2 align="left"> How to encrypt folders ? </h2>
 
