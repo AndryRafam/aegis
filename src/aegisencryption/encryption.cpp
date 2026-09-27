@@ -6,13 +6,12 @@
 
 constexpr std::string_view RESET = "\033[0m";
 constexpr std::string_view HIGHLIGHT = "\033[7m";
-constexpr std::string_view BOLD = "\033[1m";
 constexpr std::string_view BOLD_RED = "\033[1;31m";
 
 bool Encryption::encryptionMode() {
     this->clearScreen();
-    std::cout << BOLD << "Enrolling Encryption Mode" << RESET << "\n";
-    std::cout << BOLD << "=========================" << RESET << "\n\n";
+    std::cout << "Enrolling Encryption Mode" << "\n";
+    std::cout << "=========================" << "\n\n";
     std::string path = this->getValidPath();
 
     const std::vector<std::string> ciphers = {
@@ -45,18 +44,18 @@ bool Encryption::encryptionMode() {
 
             for(size_t i = 0; i < ciphers.size(); ++i) {
                 if(cipher_selection==i) {
-                    std::cout << "  > " << HIGHLIGHT << BOLD << ciphers[i] << RESET << "\n";
+                    std::cout << "  > " << HIGHLIGHT << ciphers[i] << RESET << "\n";
                 } else {
-                    std::cout << "    " << BOLD << ciphers[i] << RESET << "\n";
+                    std::cout << "    " << ciphers[i] << "\n";
                 }
             }
 
             std::cout << "\n";
-            if(action_selection==AppMode::Proceed) std::cout << "    " << HIGHLIGHT << BOLD << "[ Proceed ]" << RESET << "  ";
-            else std::cout << BOLD << "    [ Proceed ]  " << RESET;
+            if(action_selection==AppMode::Proceed) std::cout << "    " << HIGHLIGHT << "<Proceed>" << RESET << "  ";
+            else std::cout << "    <Proceed>  ";
 
-            if(action_selection==AppMode::Go_Back) std::cout << "  " << HIGHLIGHT << BOLD << "[ Go Back ]" << RESET << "\n";
-            else std::cout << BOLD << "  [ Go Back ]" << RESET << "\n";
+            if(action_selection==AppMode::Go_Back) std::cout << "  " << HIGHLIGHT << "<Back>" << RESET << "\n";
+            else std::cout << "  <Back>" << "\n";
 
             std::cout << "\n\033[K";
             if(action_selection==AppMode::Go_Back) std::cout << "                 Back to Main Menu\n";
@@ -93,7 +92,7 @@ bool Encryption::encryptionMode() {
 
     std::string password, confirm_password;
     this->clearScreen();
-    std::cout << BOLD << ciphers[cipher_selection] << " Cipher Selected" << RESET << "\n\n";
+    std::cout << ciphers[cipher_selection] << " Cipher Selected" << "\n\n";
 
     if(this->askYN("Input password manually ?")) {
         while(true) {
@@ -131,7 +130,7 @@ bool Encryption::encryptionMode() {
 	this->secure_clear(confirm_password);
 
 	std::cout << "\n" << "Encrypted Successfully" << "\n";
-	std::cout << BOLD_RED << "Warning: " << RESET << BOLD << "Do not lose your password or you will not recover your data." << RESET << "\n\n";
+	std::cout << BOLD_RED << "Warning: " << RESET << "Do not lose your password or you will not recover your data." << "\n\n";
 
 	if(this->askYN("Continue ?")) return true;
 
