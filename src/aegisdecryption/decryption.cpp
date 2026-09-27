@@ -4,15 +4,10 @@
 
 #include "decryption.hpp"
 
-constexpr std::string_view RESET = "\033[0m";
-constexpr std::string_view HIGHLIGHT = "\033[7m";
-constexpr std::string_view BOLD = "\033[1m";
-constexpr std::string_view BOLD_RED = "\033[1;31m";
-
 bool Decryption::decryptionMode() {
     this->clearScreen();
-	std::cout << BOLD << "Enrolling Decryption Mode" << RESET << std::endl;
-	std::cout << BOLD << "=========================" << RESET << "\n\n";
+	std::cout << "Enrolling Decryption Mode" << "\n";
+	std::cout << "=========================" << "\n\n";
 	std::string path = this->getValidPath();
 
 	std::ifstream file(path, std::ios::binary);
