@@ -14,6 +14,9 @@
 
 #include "../core/aegis.hpp"
 
+constexpr std::string_view RESET = "\033[0m";
+constexpr std::string_view BOLD_RED = "\033[1;31m";
+
 using namespace CryptoPP;
 
 bool Aegis::xchacha20_cipher(const std::string& mode, const std::string& filePath, const std::string& password) {
@@ -137,9 +140,9 @@ bool Aegis::xchacha20_cipher(const std::string& mode, const std::string& filePat
 	}
 	
 	catch(Exception& ex) {
-		std::cout << "\033[1;31m" << "\nError: Wrong password or Corrupted data.\n";
+		std::cout << BOLD_RED << "\nError: Wrong password or Corrupted data.\n";
 		std::cout << ex.what() << "\n";
-		std::cout << "Cannot decrypt." << "\033[0m" << "\n\n";
+		std::cout << "Cannot decrypt." << RESET << "\n\n";
 		
 		// remove the temporary file even decryption failed.
 		std::remove(tempfile.c_str());
