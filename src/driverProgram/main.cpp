@@ -11,8 +11,6 @@
 
 constexpr std::string_view RESET = "\033[0m";
 constexpr std::string_view HIGHLIGHT = "\033[7m";
-constexpr std::string_view BOLD = "\033[1m";
-constexpr std::string_view BOLD_RED = "\033[1;31m";
 
 // main function
 
@@ -41,18 +39,18 @@ int main() {
 
 			for(size_t i = 0; i < mode.size(); ++i) {
 				if(mode_selection == i) {
-					std::cout << "  > " << HIGHLIGHT << BOLD << mode[i] << RESET << "\n";
+					std::cout << "  > " << HIGHLIGHT << mode[i] << RESET << "\n";
 				} else {
-					std::cout << "    " << BOLD << mode[i] << RESET << "\n";
+					std::cout << "    " << mode[i] << "\n";
 				}
 			}
 
 			std::cout << "\n";
-			if(a->action_selection==a->AppMode::Proceed) std::cout << "   " << HIGHLIGHT << BOLD << "[ Proceed ]" << RESET << "  ";
-			else std::cout << BOLD << "   [ Proceed ]  " << RESET;
+			if(a->action_selection==a->AppMode::Proceed) std::cout << "   " << HIGHLIGHT << "<Proceed>" << RESET << "  ";
+			else std::cout << "   <Proceed>  ";
 
-			if(a->action_selection==a->AppMode::Exit) std::cout << "  " << HIGHLIGHT << BOLD << "[ Exit ]" << RESET << "\n";
-			else std::cout << BOLD << "  [ Exit ]" << RESET << "\n";
+			if(a->action_selection==a->AppMode::Exit) std::cout << "  " << HIGHLIGHT << "<Exit>" << RESET << "\n";
+			else std::cout << "  <Exit>" << "\n";
 
 			// Dynamic description Line
 			std::cout << "\n"; // 1. add an extra empty line
