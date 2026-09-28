@@ -8,9 +8,6 @@
 
 #include "../core/aegis.hpp"
 
-constexpr std::string_view RESET = "\033[0m";
-constexpr std::string_view BOLD = "\033[1m";
-
 namespace fs = std::filesystem;
 
 // Thread-safe instance initialization
@@ -30,7 +27,9 @@ int Aegis::getRandomInt(int min, int max) {
 }
 
 void Aegis::about() {
-    const std::string aboutText = R"( Aegis, Encryption Software, June 2026
+    const std::string aboutText = R"(       | Aegis TUI | 
+ 
+ Encryption Software - June 2026
  Andry RAFAM ANDRIANJAFY <andryrafam@protonmail.com>
  https://github.com/andryrafam                           
                                                             
@@ -49,7 +48,7 @@ std::string Aegis::getValidPath() {
 		if(fs::is_regular_file(path)) return path;
 		//if(fs::is_directory(path)) return path;
 		// if path doesn't exist repeat the process
-		std::cout << BOLD << "Path doesn't exist." << RESET << std::endl;
+		std::cout << "Path doesn't exist." << std::endl;
 	}
 }
 
