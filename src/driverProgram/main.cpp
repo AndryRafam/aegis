@@ -35,19 +35,18 @@ int main() {
 
 		// part of code to interact with the mode choice: encrypt or decrypt
 		while (true) {
-			std::cout << "Select mode and choose 'Proceed' using key arrows:\n";
-
+			std::cout << "Please select an option\n\n";
 			for(size_t i = 0; i < mode.size(); ++i) {
 				if(mode_selection == i) {
-					std::cout << "  > " << HIGHLIGHT << mode[i] << RESET << "\n";
+					std::cout << "    " << HIGHLIGHT << mode[i] << RESET << "\n";
 				} else {
 					std::cout << "    " << mode[i] << "\n";
 				}
 			}
 
 			std::cout << "\n";
-			if(a->action_selection==a->AppMode::Proceed) std::cout << "   " << HIGHLIGHT << "<Proceed>" << RESET << "  ";
-			else std::cout << "   <Proceed>  ";
+			if(a->action_selection==a->AppMode::Proceed) std::cout << "    " << HIGHLIGHT << "<Proceed>" << RESET << "  ";
+			else std::cout << "    <Proceed>  ";
 
 			if(a->action_selection==a->AppMode::Exit) std::cout << "  " << HIGHLIGHT << "<Exit>" << RESET << "\n";
 			else std::cout << "  <Exit>" << "\n";
@@ -85,7 +84,7 @@ int main() {
 			}
 
 			// redraw seamlessly
-			std::cout << "\033[" << mode.size()+5 << "A"; 
+			std::cout << "\033[" << mode.size()+6 << "A"; 
 		}
 
 		std::cout << "\033[?25h"; // restore cursor
