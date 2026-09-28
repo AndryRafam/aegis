@@ -32,7 +32,7 @@ bool Encryption::encryptionMode() {
     action_selection = AppMode::Proceed; // start with proceed
     char ch;
 
-    if(this->askYN("Choose cipher randomly ?")) {
+    if(this->askYN("Select cipher randomly ?")) {
         cipher_selection = this->getRandomInt(0, ciphers.size() - 1);
     }
     else {
@@ -40,11 +40,11 @@ bool Encryption::encryptionMode() {
 
         // select cipher interactive loop
         while(true) {
-            std::cout << "\nSelect cipher and choose 'Proceed' using key arrows:\n";
+            std::cout << "\nPlease select a cipher\n\n";
 
             for(size_t i = 0; i < ciphers.size(); ++i) {
                 if(cipher_selection==i) {
-                    std::cout << "  > " << HIGHLIGHT << ciphers[i] << RESET << "\n";
+                    std::cout << "    " << HIGHLIGHT << ciphers[i] << RESET << "\n";
                 } else {
                     std::cout << "    " << ciphers[i] << "\n";
                 }
@@ -84,7 +84,7 @@ bool Encryption::encryptionMode() {
 				}
 				break;
             }
-            std::cout << "\033[" << ciphers.size() + 6 << "A"; // Redraw menu dynamically
+            std::cout << "\033[" << ciphers.size() + 7 << "A"; // Redraw menu dynamically
         }
     }
 
