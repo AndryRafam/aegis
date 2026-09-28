@@ -6,9 +6,7 @@
 
 Aegis is a lightweight TUI (text user interface) encryption software using Aes-256-GCM, SM4-GCM, Twofish-EAX and  XChaCha20Poly1305 as cipher for simple encryption and Argon2id for key derivation function (secure password hashing). The software was built with C++ (std=23) and cryptopp-modern: https://cryptopp-modern.com/.
 
-![](output/encrypt.gif)
-
-![](output/decrypt.gif)
+![](output/short.gif)
 
 <h2 align="left"> Supported Ciphers </h2>
 
