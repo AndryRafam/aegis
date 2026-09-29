@@ -15,9 +15,9 @@ constexpr std::string_view HIGHLIGHT = "\033[7m";
 // main function
 
 int main() {
-    std::unique_ptr<Aegis> a = std::make_unique<Aegis>();
-    std::unique_ptr<Encryption> e = std::make_unique<Encryption>();
-    std::unique_ptr<Decryption> d = std::make_unique<Decryption>();
+    auto a = std::make_unique<Aegis>();
+    auto e = std::make_unique<Encryption>();
+    auto d = std::make_unique<Decryption>();
 
     while(true) {
 		a->clearScreen();
