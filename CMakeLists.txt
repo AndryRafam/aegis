@@ -17,13 +17,27 @@ add_compile_options(-Wall -Wextra)
 # 4. Find Dependencies
 find_package(Threads REQUIRED)
 
-# Locate cryptopp
+# 5. Locate system-installed FTXUI
+find_package(ftxui QUIET)
+
+# if can't locate ftxui
+if(NOT ftxui_FOUND)
+    include(FetchContent)
+    FetchContent_Declare(
+        ftxui
+        GIT_REPOSITORY https://github.com/ArthurSonzogni/FTXUI
+        GIT_TAG v5.0.0
+    )
+    FetchContent_MakeAvailable(ftxui)
+endif()
+
+# 6. Locate cryptopp
 find_library(CRYPTOPP_LIB NAMES cryptopp HINTS /usr/local/lib)
 if(NOT CRYPTOPP_LIB)
     message(FATAL_ERROR "ERROR: cryptopp library not found. Please install cryptopp-modern.")
 endif()
 
-# 5. Collect Source Files
+# 7. Collect Source Files
 file(GLOB CIPHER_SRCS "src/cipher/*.cpp")
 file(GLOB DEC_SRCS "src/aegisdecryption/*.cpp")
 file(GLOB ENC_SRCS "src/aegisencryption/*.cpp")
@@ -33,13 +47,19 @@ file(GLOB DRIVER_SRCS "src/driverProgram/*.cpp")
 
 set(ALL_SRCS ${CIPHER_SRCS} ${DEC_SRCS} ${ENC_SRCS} ${HELP_SRCS} ${PASSWORD_SRCS} ${DRIVER_SRCS})
 
-# 6. Define the Executable Target
+# 8. Define the Executable Target
 add_executable(aegis ${ALL_SRCS})
 
-# 7. Link Libraries
-target_link_libraries(aegis PRIVATE ${CRYPTOPP_LIB} Threads::Threads)
+# 9. Link Libraries
+target_link_libraries(aegis PRIVATE
+    ${CRYPTOPP_LIB}
+    Threads::Threads
+    ftxui::screen
+    ftxui::dom
+    ftxui::component
+)
 
-# 8. Installation Rule
+# 10. Installation Rule
 include(GNUInstallDirs)
 # CMAKE_INSTALL_BINDIR defaults to "bin" (evaluates to /usr/local/bin by default)
 install(TARGETS aegis DESTINATION ${CMAKE_INSTALL_BINDIR})
