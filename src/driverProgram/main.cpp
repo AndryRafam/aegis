@@ -1,16 +1,31 @@
 #include <iostream>
 #include <string>
-#include <string_view>
-#include <filesystem>
-#include <fstream>
+#include <vector>
 #include <memory>
+
+#include <ftxui/component/component.hpp>
+#include <ftxui/component/screen_interactive.hpp>
+#include <ftxui/dom/elements.hpp>
+#include <ftxui/screen/color.hpp>
 
 #include "../core/aegis.hpp"
 #include "../aegisencryption/encryption.hpp"
 #include "../aegisdecryption/decryption.hpp"
 
-constexpr std::string_view RESET = "\033[0m";
-constexpr std::string_view HIGHLIGHT = "\033[7m";
+using namespace ftxui;
+
+// helper function to render about() header inside FTXUI
+Element RenderAboutHeader() {
+	return vbox({
+		text(""),
+		text("Andry RAFAM ANDRIANJAFY - June 2026") | dim | hcenter | color(Color::White),
+		text("E-mail: andryrafam@protonmail.com") | dim | hcenter | color(Color::White),
+		text("Website: https://github.com/andryrafam") | dim | hcenter | color(Color::White),
+		text("Version - 1.6.8") | dim | hcenter | color(Color::White),
+		text(""),
+		text("Aegis is free software, and comes with ABSOLUTELY NO WARRANTY.") | dim | hcenter | color(Color::White),
+	});
+}
 
 // main function
 
@@ -20,79 +35,114 @@ int main() {
     auto d = std::make_unique<Decryption>();
 
     while(true) {
-		a->clearScreen();
+		int mode_selection = 0;
+		const std::vector<std::string> entries = {"Encrypt","Decrypt"};
 
-		const std::vector<std::string> mode = {
-			"Encrypt",
-			"Decrypt"
-		};
+		auto menu = Radiobox(&entries, &mode_selection);
 
-		size_t mode_selection = 0;
-
-		char ch;
-
-		std::cout << "\033[?25l"; // hide cursor
-
-		// part of code to interact with the mode choice: encrypt or decrypt
-		while (true) {
-			std::cout << "Please select an option\n\n";
-			for(size_t i = 0; i < mode.size(); ++i) {
-				if(mode_selection == i) {
-					std::cout << "    " << HIGHLIGHT << mode[i] << RESET << "\n";
-				} else {
-					std::cout << "    " << mode[i] << "\n";
-				}
+		auto menu_with_auto_select = CatchEvent(menu, [&](Event event) {
+			if((event==Event::ArrowDown || event==Event::Character('j')) && mode_selection < (int)entries.size() - 1) {
+				mode_selection++;
+			} else if((event==Event::ArrowUp || event==Event::Character('k')) && mode_selection > 0) {
+				mode_selection--;
 			}
+			return false;
+		});
 
-			std::cout << "\n";
-			if(a->action_selection==a->AppMode::Proceed) std::cout << "    " << HIGHLIGHT << "<Proceed>" << RESET << "  ";
-			else std::cout << "    <Proceed>  ";
+		auto screen = ScreenInteractive::Fullscreen();
 
-			if(a->action_selection==a->AppMode::Exit) std::cout << "  " << HIGHLIGHT << "<Exit>" << RESET << "\n";
-			else std::cout << "  <Exit>" << "\n";
+		auto btn_proceed = Button("Proceed", [&] {
+			a->action_selection = Aegis::AppMode::Proceed;
+			screen.ExitLoopClosure()();
+		});
 
-			// Dynamic description Line
-			std::cout << "\n"; // 1. add an extra empty line
-			std::cout << "\033[K"; // 2. clear the line to prevent "ghost text"
+		auto btn_exit = Button("Exit", [&] {
+			a->action_selection = Aegis::AppMode::Exit;
+			screen.ExitLoopClosure()();
+		});
+
+		auto action_row = Container::Horizontal({btn_proceed,btn_exit});
+		auto main_container = Container::Vertical({menu_with_auto_select,action_row});
+
+		// left / right arrow
+		auto container_with_events = CatchEvent(main_container, [&](Event event) {
+			// pressing right arrow from the menu highlights proceed
+			if(menu_with_auto_select->Focused() && (event==Event::ArrowRight || event==Event::Character('l'))) {
+				btn_proceed->TakeFocus();
+				return true;
+			}
+			// pressing left arrow on proceed returns focus back to the menu
+			if(btn_proceed->Focused() && (event==Event::ArrowLeft || event == Event::Character('h'))) {
+				menu_with_auto_select->TakeFocus();
+				return true;
+			}
+			return false;
+		});
+
+		auto renderer = Renderer(container_with_events, [&] {
+			std::string description;
 			
-			(a->action_selection==a->AppMode::Exit) ? std::cout << "                Exit the program\n" : std::cout << "\n";
-
-			ch = a->getch();
-
-			if(ch==27) { // ascii value for escape
-				a->getch(); // discard the intermediate '[' character
-				switch (a->getch()) {
-					case 'A':
-						mode_selection = (mode_selection==0) ? mode.size()-1 : mode_selection-1;
-						break;
-					case 'B':
-						mode_selection = (mode_selection==mode.size()-1) ? 0 : mode_selection+1;
-						break;
-					case 'D': // left arrow (wrap around logic)
-					case 'C': // right arrow (wrap around logic)
-						a->action_selection = (a->action_selection==a->AppMode::Proceed) ? a->AppMode::Exit : a->AppMode::Proceed;
-						break;
-				}
-			} else if(ch==10) {
-				if(a->action_selection==a->AppMode::Exit) {
-					a->clearScreen();
-					std::cout << "Program Terminated.\n\n";
-					std::cout << "\033[?25h"; // restore cursor
-					return 0;
-				}
-				break; // enter key
+			if(btn_exit->Focused()) {
+				description = "Exit the program";
+			} else if(btn_proceed->Focused()) {
+				description = (mode_selection==0) ? "Proceed to Encrypion" : "Proceed to Decryption";
+			} else {
+				description = (mode_selection==0) ? "Encrypt mode" : "Decrypt mode";
 			}
 
-			// redraw seamlessly
-			std::cout << "\033[" << mode.size()+6 << "A"; 
-		}
+			// combine the about header banner and the menu into one centered window
+			auto content_box = window(
+				text(" | Aegis TUI | ") | hcenter | color(Color::White),
+				vbox({
+					RenderAboutHeader(), // about the program
+					separator(),
+					text("Please select an option") | hcenter | color(Color::White),
+					text(""),
+					menu->Render(),
+					text(""),
 
-		std::cout << "\033[?25h"; // restore cursor
+					// put some space between Proceed and Exit button
+					hbox({
+						btn_proceed->Render(),
+						text("   "),
+						btn_exit->Render(),
+					}) | hcenter,
 
-		if(mode_selection==0) {
-			if(!e->encryptionMode()) return 0;
-		} else if(mode_selection==1) {
-			if(!d->decryptionMode()) return 0;
+					separator(),
+					text(description) | dim | hcenter,
+				})
+			) | size(WIDTH, EQUAL, 68);
+
+			return vbox({
+				filler(),
+				hbox({
+					filler(),
+					content_box,
+					filler(),
+				}),
+				filler(),
+			});
+		});
+
+		screen.Loop(renderer);
+
+		switch(a->action_selection) {
+			case Aegis::AppMode::Exit:
+				std::cout << "\033[H\033[J"; // clear the screen
+				std::cout << "Program Terminated.\n\n";
+				return 0;
+
+			case Aegis::AppMode::Proceed:
+				a->clearScreen();
+				if(mode_selection==0) {
+					if(!e->encryptionMode()) return 0;
+				} else if (mode_selection==1) {
+					if(!d->decryptionMode()) return 0;
+				}
+				break;
+			case Aegis::AppMode::Go_Back:
+    		default:
+        		break; // Deliberately do nothing for Go_Back or unexpected modes
 		}
 	}
 }
