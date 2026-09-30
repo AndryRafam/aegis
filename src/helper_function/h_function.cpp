@@ -29,12 +29,12 @@ int Aegis::getRandomInt(int min, int max) {
 void Aegis::about() {
     const std::string aboutText = R"(       | Aegis TUI | 
  
- Encryption Software - June 2026
- Andry RAFAM ANDRIANJAFY <andryrafam@protonmail.com>
- https://github.com/andryrafam                           
+ Andry RAFAM ANDRIANJAFY - June 2026
+ E-mail: andryrafam@protonmail.com
+ Website: https://github.com/andryrafam
+ Version - 1.6.8                           
                                                             
- Aegis is free software, and                       
- comes with ABSOLUTELY NO WARRANTY.  
+ Aegis is free software, and comes with ABSOLUTELY NO WARRANTY.  
 )";
 	std::cout << aboutText << "\n";
 }
