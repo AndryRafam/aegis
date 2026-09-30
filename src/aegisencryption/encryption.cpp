@@ -90,35 +90,15 @@ bool Encryption::encryptionMode() {
 
     std::cout << "\033[?25h"; // restore cursor
 
-    std::string password, confirm_password;
+    std::string password;
     this->clearScreen();
     std::cout << ciphers[cipher_selection] << " Cipher Selected" << "\n\n";
 
-    if(this->askYN("Input password manually ?")) {
-        while(true) {
-			std::cout << "Password >: ";
-			this->setEcho(false);
-			std::getline(std::cin, password);
-			this->setEcho(true);
-			std::cout << "\n";
-			std::cout << "Confirm Password >: ";
-			this->setEcho(false);
-			std::getline(std::cin, confirm_password);
-			this->setEcho(true);
-			std::cout << "\n";
-
-			if(password==confirm_password) {
-				break;
-			}
-			std::cout << BOLD_RED << "Password does not match. Try again." << RESET << std::endl;
-		}
-    }
-    else { // password generation
-        int random_length = this->getRandomInt(16, 32);
-		password = this->generatePassword(random_length);
-		std::cout << "Generated Password >: " << password << "\n";
-    }
-
+    // generate password randomly
+    int random_length = this->getRandomInt(16, 32);
+	password = this->generatePassword(random_length);
+	std::cout << "Generated Password >: " << password << "\n";
+    
     // run selected cipher
     if(cipher_selection==0) this->aes_cipher("encrypt", path, password);
 	else if(cipher_selection==1) this->sm4_cipher("encrypt", path, password);
@@ -127,7 +107,6 @@ bool Encryption::encryptionMode() {
 
 	// wipe password contents
 	this->secure_clear(password);
-	this->secure_clear(confirm_password);
 
 	std::cout << "\n" << "Encrypted Successfully" << "\n";
 	std::cout << BOLD_RED << "Warning: " << RESET << "Do not lose your password or you will not recover your data." << "\n\n";
