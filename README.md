@@ -8,7 +8,7 @@ Aegis is a lightweight TUI (text user interface) encryption software using Aes-2
 
 <h4 align="left"> Starting from version-1.6.8, for security reason, password is generated randomly </h4>
 
-![](output/1.6.8.gif)
+![](output/1.6.9.gif)
 
 <h2 align="left"> Supported Ciphers </h2>
 
