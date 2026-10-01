@@ -4,7 +4,9 @@
 
 <h2 algin="left"> About </h2>
 
-Aegis is a lightweight TUI (text user interface) encryption software using Aes-256-GCM, SM4-GCM, Twofish-EAX and  XChaCha20Poly1305 as cipher for simple encryption and Argon2id for key derivation function (secure password hashing). 
+Aegis is a lightweight TUI (text user interface) encryption software using Aes-256-GCM, SM4-GCM, Twofish-EAX and  XChaCha20Poly1305 as cipher for simple encryption and Argon2id for key derivation function (secure password hashing).
+
+<h4 align="left"> Starting from version-1.6.8, for security reason, password is generated randomly </h4>
 
 ![](output/1.6.8.gif)
 
