@@ -21,7 +21,7 @@ Element RenderAboutHeader() {
 		text("Andry RAFAM ANDRIANJAFY - June 2026") | dim | hcenter | color(Color::White),
 		text("E-mail: andryrafam@protonmail.com") | dim | hcenter | color(Color::White),
 		text("Website: https://github.com/andryrafam") | dim | hcenter | color(Color::White),
-		text("Version - 1.6.8") | dim | hcenter | color(Color::White),
+		text("Version - 1.6.9") | dim | hcenter | color(Color::White),
 		text(""),
 		text("Aegis is free software, and comes with ABSOLUTELY NO WARRANTY.") | dim | hcenter | color(Color::White),
 	});
@@ -61,14 +61,15 @@ int main() {
 			screen.ExitLoopClosure()();
 		});
 
-		auto action_row = Container::Horizontal({btn_proceed,btn_exit});
-		auto main_container = Container::Vertical({menu_with_auto_select,action_row});
+		auto action_column = Container::Vertical({btn_proceed,btn_exit});
+		auto main_container = Container::Horizontal({menu_with_auto_select,action_column});
 
 		// left / right arrow
 		auto container_with_events = CatchEvent(main_container, [&](Event event) {
 			// pressing right arrow from the menu highlights proceed
 			if(menu_with_auto_select->Focused() && (event==Event::ArrowRight || event==Event::Character('l'))) {
-				btn_proceed->TakeFocus();
+				//btn_proceed->TakeFocus();
+				action_column->TakeFocus();
 				return true;
 			}
 			// pressing left arrow on proceed returns focus back to the menu
@@ -92,22 +93,38 @@ int main() {
 
 			// combine the about header banner and the menu into one centered window
 			auto content_box = window(
-				text(" | Aegis TUI | ") | hcenter | color(Color::White),
+				text(" | Aegis TUI | ") | hcenter | bold | color(Color::White),
 				vbox({
 					RenderAboutHeader(), // about the program
 					separator(),
-					text("Please select an option") | hcenter | color(Color::White),
-					text(""),
-					menu->Render(),
 					text(""),
 
-					// put some space between Proceed and Exit button
+					// Side by side layout
 					hbox({
-						btn_proceed->Render(),
-						text("   "),
-						btn_exit->Render(),
-					}) | hcenter,
+						filler(),
 
+						// -- LEFT COLUMN: text, Encrypt and Decrypt
+						vbox({
+							text("Please select an option") | hcenter | bold | color(Color::White),
+							text(""),
+							menu->Render(),
+						}) | center,
+
+						filler(),
+						separator(), // vertical divider line
+						filler(),
+
+						// -- RIGHT COLUMN: Proceed and Exit buttons
+						vbox({
+							btn_proceed->Render(),
+							text("   "), // space between proceed and exit buttons
+							btn_exit->Render(),
+						}) | center,
+
+						filler(),
+					}),
+					
+					text(""),
 					separator(),
 					text(description) | dim | hcenter,
 				})
