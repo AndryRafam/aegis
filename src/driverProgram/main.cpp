@@ -68,7 +68,6 @@ int main() {
 		auto container_with_events = CatchEvent(main_container, [&](Event event) {
 			// pressing right arrow from the menu highlights proceed
 			if(menu_with_auto_select->Focused() && (event==Event::ArrowRight || event==Event::Character('l'))) {
-				//btn_proceed->TakeFocus();
 				action_column->TakeFocus();
 				return true;
 			}
