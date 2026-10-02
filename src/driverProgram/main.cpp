@@ -18,12 +18,12 @@ using namespace ftxui;
 Element RenderAboutHeader() {
 	return vbox({
 		text(""),
-		text("Andry RAFAM ANDRIANJAFY - June 2026") | dim | hcenter | color(Color::White),
-		text("E-mail: andryrafam@protonmail.com") | dim | hcenter | color(Color::White),
-		text("Website: https://github.com/andryrafam") | dim | hcenter | color(Color::White),
-		text("Version - 1.6.9.1") | dim | hcenter | color(Color::White),
+		text("Andry RAFAM ANDRIANJAFY - June 2026") | hcenter | color(Color::White),
+		text("E-mail: andryrafam@protonmail.com") | hcenter | color(Color::White),
+		text("Website: https://github.com/andryrafam") | hcenter | color(Color::White),
+		text("Version - 1.6.9.1") | hcenter | color(Color::White),
 		text(""),
-		text("Aegis is free software, and comes with ABSOLUTELY NO WARRANTY.") | dim | hcenter | color(Color::White),
+		text("Aegis is free software, and comes with ABSOLUTELY NO WARRANTY.") | hcenter | color(Color::White),
 	});
 }
 
