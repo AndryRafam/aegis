@@ -32,7 +32,7 @@ void Aegis::about() {
  Andry RAFAM ANDRIANJAFY - June 2026
  E-mail: andryrafam@protonmail.com
  Website: https://github.com/andryrafam
- Version - 1.6.9                           
+ Version - 1.6.9.1                           
                                                             
  Aegis is free software, and comes with ABSOLUTELY NO WARRANTY.  
 )";
