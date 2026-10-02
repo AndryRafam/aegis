@@ -21,7 +21,7 @@ Element RenderAboutHeader() {
 		text("Andry RAFAM ANDRIANJAFY - June 2026") | dim | hcenter | color(Color::White),
 		text("E-mail: andryrafam@protonmail.com") | dim | hcenter | color(Color::White),
 		text("Website: https://github.com/andryrafam") | dim | hcenter | color(Color::White),
-		text("Version - 1.6.9") | dim | hcenter | color(Color::White),
+		text("Version - 1.6.9.1") | dim | hcenter | color(Color::White),
 		text(""),
 		text("Aegis is free software, and comes with ABSOLUTELY NO WARRANTY.") | dim | hcenter | color(Color::White),
 	});
