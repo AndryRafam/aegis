@@ -6,7 +6,13 @@
 #include <unistd.h>
 #include <filesystem>
 
+#include <ftxui/screen/screen.hpp>
+#include <ftxui/dom/elements.hpp>
+#include <ftxui/screen/color.hpp>
+
 #include "../core/aegis.hpp"
+
+using namespace ftxui;
 
 namespace fs = std::filesystem;
 
@@ -27,16 +33,23 @@ int Aegis::getRandomInt(int min, int max) {
 }
 
 void Aegis::about() {
-    const std::string aboutText = R"(       | Aegis TUI | 
- 
- Andry RAFAM ANDRIANJAFY - June 2026
- E-mail: andryrafam@protonmail.com
- Website: https://github.com/andryrafam
- Version - 1.6.9.1                           
-                                                            
- Aegis is free software, and comes with ABSOLUTELY NO WARRANTY.  
-)";
-	std::cout << aboutText << "\n";
+    auto headerAbout = window(
+        text(" | Aegis TUI | ") | hcenter | bold | color(Color::White),
+        vbox({
+            text(""),
+            text("Andry RAFAM ANDRIANJAFY - June 2026") | hcenter | color(Color::White),
+            text("E-mail: andryrafam@protonmail.com") | hcenter | color(Color::White),
+            text("Website: https://github.com/andryrafam") | hcenter | color(Color::White),
+            text("Version - 1.6.9.2") | hcenter | color(Color::White),
+            text(""),
+            text("Aegis is free software, and comes with ABSOLUTELY NO WARRANTY.") | hcenter | color(Color::White),
+        })
+    ) | size(WIDTH, EQUAL, 68);
+
+    // show the about at the top left of the screen
+    auto ftxui_screen = Screen::Create(Dimension::Fixed(68), Dimension::Fit(headerAbout));
+    Render(ftxui_screen, headerAbout);
+    ftxui_screen.Print();
 }
 
 std::string Aegis::getValidPath() {
