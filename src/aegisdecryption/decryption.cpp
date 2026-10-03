@@ -6,8 +6,9 @@
 
 bool Decryption::decryptionMode() {
     this->clearScreen();
-	std::cout << "Enrolling Decryption Mode" << "\n";
-	std::cout << "=========================" << "\n\n";
+	std::cout << "\n";
+	std::cout << "Decryption Mode" << "\n";
+	std::cout << "===============" << "\n\n";
 	std::string path = this->getValidPath();
 
 	std::ifstream file(path, std::ios::binary);
@@ -50,7 +51,8 @@ bool Decryption::decryptionMode() {
 	if(success) std::cout << "\n" << "Decrypted Successfully" << "\n";
 	if(this->askYN("Continue ?")) return true;
 
-	this->clearScreen();
+	std::cout << "\033[H\033[J"; // clear the screen
+	
 	std::cout << "Program Terminated.\n\n";
 	return false;
 }
