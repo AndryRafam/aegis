@@ -1,10 +1,12 @@
-[![C++](https://img.shields.io/badge/C++-%2300599C.svg?logo=c%2B%2B&logoColor=white)](#)
-[![Debian](https://img.shields.io/badge/Debian-A81D33?logo=debian&logoColor=fff)](#)
-[![Fedora](https://img.shields.io/badge/Fedora-51A2DA?logo=fedora&logoColor=fff)](#)
+![](output/demo_1.6.9.2.gif)
+
+<p align="center">
+ [![C++](https://img.shields.io/badge/C++-%2300599C.svg?logo=c%2B%2B&logoColor=white)](#)
+ [![Debian](https://img.shields.io/badge/Debian-A81D33?logo=debian&logoColor=fff)](#)
+ [![Fedora](https://img.shields.io/badge/Fedora-51A2DA?logo=fedora&logoColor=fff)](#)
+</p>
 
 <h1 align="left"> AEGIS </h1>
-
-![](output/demo_1.6.9.2.gif)
 
 *Lightweight Terminal User Interface (TUI) encryption software.*
 
