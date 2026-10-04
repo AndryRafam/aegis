@@ -2,13 +2,11 @@
 [![Debian](https://img.shields.io/badge/Debian-A81D33?logo=debian&logoColor=fff)](#)
 [![Fedora](https://img.shields.io/badge/Fedora-51A2DA?logo=fedora&logoColor=fff)](#)
 
-<h2 align="left"> About </h2>
-
-Aegis is a lightweight TUI (Terminal User Interface) encryption software using Aes-256-GCM, SM4-GCM, Twofish-EAX and  XChaCha20Poly1305 as cipher for simple encryption and Argon2id for key derivation function (secure password hashing).
-
-<h5 align="left"> Starting from version-1.6.8, for security reason, password is generated randomly. </h5>
+<h1 align="left"> AEGIS </h1>
 
 ![](output/demo_1.6.9.2.gif)
+
+Aegis is a lightweight TUI (Terminal User Interface) encryption software using Aes-256-GCM, SM4-GCM, Twofish-EAX and  XChaCha20Poly1305 as cipher for simple encryption and Argon2id for key derivation function (secure password hashing).
 
 <h2 align="left"> Supported Ciphers </h2>
 
