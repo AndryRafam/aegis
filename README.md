@@ -9,19 +9,18 @@
 Aegis is a lightweight TUI (Terminal User Interface) encryption software.
 
 <h2 align="left"> Feature </h2>
-
-<h4 align="left"> Supported Ciphers </h4>
+<h3 align="left"> Supported Ciphers </h3>
 
 - Aes256-GCM (orginal name Rijndael): https://en.wikipedia.org/wiki/Advanced_Encryption_Standard
 - SM4-GCM (ShāngMì 4): https://en.wikipedia.org/wiki/SM4_(cipher)
 - Twofish-EAX (Aes contest runner up developped by Bruce Schneier): https://en.wikipedia.org/wiki/Twofish
 - XChaCha20Poly1305: https://en.wikipedia.org/wiki/ChaCha20-Poly1305
 
-<h4 align="left"> KDF </h4>
+<h3 align="left"> KDF </h3>
 
 - Argon2id: https://en.wikipedia.org/wiki/Argon2
  
-<h4 align="left"> Tools </h4>
+<h3 align="left"> Tools </h3>
 
 - Programming Language: C++ (std=17/20/23)
 - Debugger: Valgrind
