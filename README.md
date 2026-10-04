@@ -6,7 +6,7 @@
 
 ![](output/demo_1.6.9.2.gif)
 
-*Aegis is a lightweight TUI (Terminal User Interface) encryption software.*
+*Lightweight Terminal User Interface (TUI) encryption software.*
 
 <h2 align="left"> Feature </h2>
 
