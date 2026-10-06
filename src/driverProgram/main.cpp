@@ -21,7 +21,7 @@ Element RenderAboutHeader() {
 		text("Andry RAFAM ANDRIANJAFY - June 2026") | hcenter | color(Color::White),
 		text("E-mail: andryrafam@protonmail.com") | hcenter | color(Color::White),
 		text("Website: https://github.com/andryrafam") | hcenter | color(Color::White),
-		text("Version - 1.6.9.2") | hcenter | color(Color::White),
+		text("Version - 1.6.9.3") | hcenter | color(Color::White),
 		text(""),
 		text("Aegis is free software, and comes with ABSOLUTELY NO WARRANTY.") | hcenter | color(Color::White),
 	});
@@ -38,42 +38,43 @@ int main() {
 		int mode_selection = 0;
 		const std::vector<std::string> entries = {"Encrypt","Decrypt"};
 
-		auto menu = Radiobox(&entries, &mode_selection);
-
-		auto menu_with_auto_select = CatchEvent(menu, [&](Event event) {
-			if((event==Event::ArrowDown || event==Event::Character('j')) && mode_selection < (int)entries.size() - 1) {
-				mode_selection++;
-			} else if((event==Event::ArrowUp || event==Event::Character('k')) && mode_selection > 0) {
-				mode_selection--;
-			}
-			return false;
-		});
+		auto menu = Menu(&entries, &mode_selection);
 
 		auto screen = ScreenInteractive::Fullscreen();
+
+		ButtonOption option;
+		option.transform = [](const EntryState& state) {
+			// center the text proceed and exit
+			auto button_box = text(state.label) | hcenter;
+			if(state.focused) {
+				return button_box | border | bold | inverted;
+			}
+			return button_box | border | dim;
+		};
 
 		auto btn_proceed = Button("Proceed", [&] {
 			a->action_selection = Aegis::AppMode::Proceed;
 			screen.ExitLoopClosure()();
-		});
+		}, option);
 
 		auto btn_exit = Button("Exit", [&] {
 			a->action_selection = Aegis::AppMode::Exit;
 			screen.ExitLoopClosure()();
-		});
+		}, option);
 
 		auto action_column = Container::Vertical({btn_proceed,btn_exit});
-		auto main_container = Container::Horizontal({menu_with_auto_select,action_column});
+		auto main_container = Container::Horizontal({menu,action_column});
 
 		// left / right arrow
 		auto container_with_events = CatchEvent(main_container, [&](Event event) {
 			// pressing right arrow from the menu highlights proceed
-			if(menu_with_auto_select->Focused() && (event==Event::ArrowRight || event==Event::Character('l'))) {
+			if(menu->Focused() && (event==Event::ArrowRight)) {
 				action_column->TakeFocus();
 				return true;
 			}
 			// pressing left arrow on proceed returns focus back to the menu
-			if(btn_proceed->Focused() && (event==Event::ArrowLeft || event == Event::Character('h'))) {
-				menu_with_auto_select->TakeFocus();
+			if(btn_proceed->Focused() && (event==Event::ArrowLeft)) {
+				menu->TakeFocus();
 				return true;
 			}
 			return false;
