@@ -43,21 +43,21 @@ bool Encryption::encryptionMode() {
 
         for(size_t i = 0; i < ciphers.size(); ++i) {
             if(cipher_selection==i) {
-                std::cout << "  * " << HIGHLIGHT << ciphers[i] << RESET << "\n";
+                std::cout << "  " << HIGHLIGHT << ciphers[i] << RESET << "\n";
             } else {
-                std::cout << "    " << ciphers[i] << "\n";
+                std::cout << "  " << ciphers[i] << "\n";
             }
         }
 
         std::cout << "\n";
-        if(action_selection==AppMode::Proceed) std::cout << "    " << HIGHLIGHT << "<Proceed>" << RESET << "  ";
-        else std::cout << "    <Proceed>  ";
+        if(action_selection==AppMode::Proceed) std::cout << "  " << HIGHLIGHT << "<Proceed>" << RESET << "  ";
+        else std::cout << "  <Proceed>  ";
 
         if(action_selection==AppMode::Go_Back) std::cout << "  " << HIGHLIGHT << "<Back>" << RESET << "\n";
         else std::cout << "  <Back>" << "\n";
 
         std::cout << "\n\033[K";
-        if(action_selection==AppMode::Go_Back) std::cout << "                 Back to Main Menu\n";
+        if(action_selection==AppMode::Go_Back) std::cout << "              Back to Main Menu\n";
         else std::cout << " " << about_ciphers[cipher_selection] << "\n";
 
         ch = this->getch();
