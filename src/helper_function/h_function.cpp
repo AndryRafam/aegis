@@ -40,7 +40,7 @@ void Aegis::about() {
             text("Andry RAFAM ANDRIANJAFY - June 2026") | hcenter | color(Color::White),
             text("E-mail: andryrafam@protonmail.com") | hcenter | color(Color::White),
             text("Website: https://github.com/andryrafam") | hcenter | color(Color::White),
-            text("Version - 1.6.9.3") | hcenter | color(Color::White),
+            text("Version - 1.7.0") | hcenter | color(Color::White),
             text(""),
             text("Aegis is free software, and comes with ABSOLUTELY NO WARRANTY.") | hcenter | color(Color::White),
         })
