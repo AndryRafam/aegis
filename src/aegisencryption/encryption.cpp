@@ -20,14 +20,12 @@ bool Encryption::encryptionMode() {
     const std::vector<std::string> ciphers = {
         "Aes256-GCM",
 		"SM4-GCM",
-		"Twofish-EAX",
         "XChaCha20Poly1305"
     };
 
     const std::vector<std::string> about_ciphers = {
         "Original name Rijndael. Winner of the AES contest.",
 		"ShāngMì 4 - Standardised for commercial cryptography in China.",
-		"AES contest finalist developed by Bruce Schneier.",
 		"Extended version of ChaCha20."
     };
 
@@ -103,8 +101,7 @@ bool Encryption::encryptionMode() {
     // run selected cipher
     if(cipher_selection==0) this->aes_cipher("encrypt", path, password);
 	else if(cipher_selection==1) this->sm4_cipher("encrypt", path, password);
-	else if(cipher_selection==2) this->twofish_cipher("encrypt", path, password);
-	else if(cipher_selection==3) this->xchacha20_cipher("encrypt", path, password);
+	else if(cipher_selection==2) this->xchacha20_cipher("encrypt", path, password);
 
 	// wipe password contents
 	this->secure_clear(password);
