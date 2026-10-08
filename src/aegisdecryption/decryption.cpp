@@ -36,8 +36,7 @@ bool Decryption::decryptionMode() {
 
 	if(cipherID=="01") success = this->aes_cipher("decrypt", path, password);
 	else if(cipherID=="02") success = this->sm4_cipher("decrypt", path, password);
-	else if(cipherID=="03") success = this->twofish_cipher("decrypt", path, password);
-	else if(cipherID=="04") success = this->xchacha20_cipher("decrypt", path, password);
+	else if(cipherID=="03") success = this->xchacha20_cipher("decrypt", path, password);
 	else {
 		this->secure_clear(password); // wipe password contents
 		std::cout << "\nCannot decrypt. Encryption algorithm not recognized." << "\n\n";
