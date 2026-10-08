@@ -63,7 +63,7 @@ bool Aegis::xchacha20_cipher(const std::string& mode, const std::string& filePat
 				FileSink binarySink(tempfile.c_str());
 
 				// writer cipher ID for XChaCha20Poly1305
-				byte cipherID = 0x04;
+				byte cipherID = 0x03;
 				binarySink.Put(&cipherID, 1);
 
 				binarySink.Put(salt, salt.size());
@@ -101,7 +101,7 @@ bool Aegis::xchacha20_cipher(const std::string& mode, const std::string& filePat
 			byte cipherID = 0;
 			in.read((char*)&cipherID, 1);
 			if (in.gcount()!=1) throw std::runtime_error("File truncated: Missing Cipher ID.");
-			if (cipherID != 0x04) throw std::runtime_error("Cipher ID mismatch: This file was not encrypted with XChaCha20Poly1305");
+			if (cipherID != 0x03) throw std::runtime_error("Cipher ID mismatch: This file was not encrypted with XChaCha20Poly1305");
 			
 			SecByteBlock salt(SALT_SIZE);
 			in.read((char*)salt.data(), salt.size());
