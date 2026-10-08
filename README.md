@@ -1,4 +1,4 @@
-![](output/demo_1.6.9.3.gif)
+![](output/demo_1.7.0.gif)
 
 <p align="center">
   <a href="#"><img src="https://img.shields.io/badge/c%2B%2B-%2300599C.svg?style=for-the-badge&logo=cplusplus&logoColor=white"></a>
@@ -9,7 +9,7 @@
 
 <h1 align="left"> AEGIS </h1>
 
-*Lightweight Terminal User Interface (TUI) encryption software.*
+*Lightweight Minimalist Terminal User Interface (TUI) encryption software.*
 
 <h2 align="left"> Feature </h2>
 
@@ -17,7 +17,6 @@
 
 - Aes256-GCM (orginal name Rijndael): https://en.wikipedia.org/wiki/Advanced_Encryption_Standard
 - SM4-GCM (ShāngMì 4): https://en.wikipedia.org/wiki/SM4_(cipher)
-- Twofish-EAX (Aes contest runner up developped by Bruce Schneier): https://en.wikipedia.org/wiki/Twofish
 - XChaCha20Poly1305: https://en.wikipedia.org/wiki/ChaCha20-Poly1305
 
 <h4 align="left"> KDF </h4>
@@ -74,5 +73,5 @@ To encrypt folder, first compress/archive the folder (.7z, .zip, .rar, .tar etc.
 
 <h2 align="left"> Acknowledgement </h2>
 
-Aegis is free software and comes with absolutely no warranty. This software is intended for personal use and educational use only. It is not suitable for industrial/professional use.
+Aegis is free software and comes with absolutely no warranty. This software is intended for personal use.
 
