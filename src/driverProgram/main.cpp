@@ -14,19 +14,6 @@
 
 using namespace ftxui;
 
-// helper function to render about() header inside FTXUI
-Element RenderAboutHeader() {
-	return vbox({
-		text(""),
-		text("Andry RAFAM ANDRIANJAFY - June 2026") | hcenter | color(Color::White),
-		text("E-mail: andryrafam@protonmail.com") | hcenter | color(Color::White),
-		text("Website: https://github.com/andryrafam") | hcenter | color(Color::White),
-		text("Version - 1.6.9.3") | hcenter | color(Color::White),
-		text(""),
-		text("Aegis is free software, and comes with ABSOLUTELY NO WARRANTY.") | hcenter | color(Color::White),
-	});
-}
-
 // main function
 
 int main() {
@@ -41,10 +28,9 @@ int main() {
 		auto menu = Menu(&entries, &mode_selection);
 
 		auto screen = ScreenInteractive::Fullscreen();
-
+		
 		ButtonOption option;
 		option.transform = [](const EntryState& state) {
-			// center the text proceed and exit
 			auto button_box = text(state.label) | hcenter;
 			if(state.focused) {
 				return button_box | border | bold | inverted;
@@ -69,7 +55,7 @@ int main() {
 		auto container_with_events = CatchEvent(main_container, [&](Event event) {
 			// pressing right arrow from the menu highlights proceed
 			if(menu->Focused() && (event==Event::ArrowRight)) {
-				action_column->TakeFocus();
+				btn_proceed->TakeFocus();
 				return true;
 			}
 			// pressing left arrow on proceed returns focus back to the menu
@@ -93,17 +79,12 @@ int main() {
 
 			// combine the about header banner and the menu into one centered window
 			auto content_box = window(
-				text(" | Aegis TUI | ") | hcenter | bold | color(Color::White),
+				text(" | Aegis TUI | ") | hcenter | color(Color::White),
 				vbox({
-					RenderAboutHeader(), // about the program
-					separator(),
 					text(""),
-
-					// Side by side layout
 					hbox({
 						filler(),
-
-						// -- LEFT COLUMN: text, Encrypt and Decrypt
+						// -- LEFT COLUMN: encrypt and decrypt
 						vbox({
 							text("Please select an option") | hcenter | bold | color(Color::White),
 							text(""),
@@ -111,24 +92,23 @@ int main() {
 						}) | center,
 
 						filler(),
-						separator(), // vertical divider line
+						separator(),
 						filler(),
 
-						// -- RIGHT COLUMN: Proceed and Exit buttons
+						// -- RIGHT COLUMN: proceed and exit buttons
 						vbox({
 							btn_proceed->Render(),
-							text("   "), // space between proceed and exit buttons
+							text("  "),
 							btn_exit->Render(),
 						}) | center,
-
+					
 						filler(),
 					}),
-					
+
 					text(""),
-					separator(),
 					text(description) | dim | hcenter,
 				})
-			) | size(WIDTH, EQUAL, 68);
+			) | size(WIDTH, EQUAL, 45);
 
 			return vbox({
 				filler(),
