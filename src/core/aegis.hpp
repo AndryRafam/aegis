@@ -24,7 +24,6 @@ class Aegis {
     protected:
         bool aes_cipher(const std::string& mode, const std::string& filePath, const std::string& password);
         bool sm4_cipher(const std::string& mode, const std::string& filePath, const std::string& password);
-        bool twofish_cipher(const std::string& mode, const std::string& filePath, const std::string& password);
         bool xchacha20_cipher(const std::string& mode, const std::string& filePath, const std::string& password);
         
         static CryptoPP::AutoSeededRandomPool& get_rng();
