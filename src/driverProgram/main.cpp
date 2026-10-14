@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 
+#include <ftxui/component/captured_mouse.hpp>
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/screen_interactive.hpp>
 #include <ftxui/dom/elements.hpp>
@@ -127,7 +128,7 @@ int main() {
 			case Aegis::AppMode::Exit:
 				std::cout << "\033[H\033[J"; // clear the screen
 				std::cout << "Program Terminated.\n\n";
-				return 0;
+				return false;
 
 			case Aegis::AppMode::Proceed:
 				a->clearScreen();
@@ -137,6 +138,7 @@ int main() {
 					if(!d->decryptionMode()) return 0;
 				}
 				break;
+				
 			case Aegis::AppMode::Go_Back:
     		default:
         		break; // Deliberately do nothing for Go_Back or unexpected modes
