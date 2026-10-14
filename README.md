@@ -40,7 +40,7 @@ To build and install using cmake, type the following command in terminal. The ex
 Create and enter a temporary build directory
 
 ```json
-$ cmake -B build -S .
+$ cmake -B build
 ```
 Compile the executable
 
