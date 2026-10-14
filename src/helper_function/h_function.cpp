@@ -40,7 +40,7 @@ void Aegis::about() {
             text("Andry RAFAM ANDRIANJAFY - June 2026") | hcenter | color(Color::White),
             text("E-mail: andryrafam@protonmail.com") | hcenter | color(Color::White),
             text("Website: https://github.com/andryrafam") | hcenter | color(Color::White),
-            text("Version - 1.7.0") | hcenter | color(Color::White),
+            text("Version - 1.7.1") | hcenter | color(Color::White),
             text(""),
             text("Aegis is free software, and comes with ABSOLUTELY NO WARRANTY.") | hcenter | color(Color::White),
         })
@@ -63,18 +63,6 @@ std::string Aegis::getValidPath() {
 		// if path doesn't exist repeat the process
 		std::cout << "Path doesn't exist." << std::endl;
 	}
-}
-
-char Aegis::getch() {
-    struct termios oldt, newt; // old terminal, new terminal
-    char ch;
-    tcgetattr(STDIN_FILENO, &oldt);
-    newt = oldt;
-    newt.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-    ch = getchar();
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-    return ch;
 }
 
 bool Aegis::askYN(std::string_view prompt) {
