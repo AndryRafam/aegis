@@ -19,7 +19,6 @@ class Aegis {
         AppMode action_selection{AppMode::Proceed}; // default initialization
         
         void clearScreen();
-        char getch();
         
     protected:
         bool aes_cipher(const std::string& mode, const std::string& filePath, const std::string& password);
@@ -29,7 +28,6 @@ class Aegis {
         static CryptoPP::AutoSeededRandomPool& get_rng();
         int getRandomInt(int min, int max);
         std::string generatePassword(int length);
-        void setEcho(bool enable);
         bool askYN(std::string_view prompt);
         void secure_clear(std::string& s); // wipe string contents
         std::string getValidPath();
