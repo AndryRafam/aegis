@@ -2,13 +2,22 @@
 #include <iostream>
 #include <fstream>
 
+#include <ftxui/component/captured_mouse.hpp>
+#include <ftxui/component/component.hpp>
+#include <ftxui/component/component_options.hpp>
+#include <ftxui/dom/elements.hpp>
+#include <ftxui/component/event.hpp>
+#include <ftxui/component/screen_interactive.hpp>
+
 #include "decryption.hpp"
 
 bool Decryption::decryptionMode() {
+	using namespace ftxui;
+
     this->clearScreen();
+	auto screen = ScreenInteractive::TerminalOutput();
 	std::cout << "\n";
-	std::cout << "Decryption Mode" << "\n";
-	std::cout << "===============" << "\n\n";
+	std::cout << "DECRYPTION MODE" << "\n\n";
 	std::string path = this->getValidPath();
 
 	std::ifstream file(path, std::ios::binary);
@@ -25,11 +34,39 @@ bool Decryption::decryptionMode() {
 	std::string cipherID(header, 2);
 	std::string password;
 
-	std::cout << "Enter Password >: ";
-	this->setEcho(false);
-	std::getline(std::cin, password);
-	this->setEcho(true);
-	std::cout << "\n";
+	InputOption password_option;
+	password_option.password = true;
+	password_option.transform = [](InputState state) {
+		if(state.is_placeholder) {
+			state.element |= dim;
+		}
+		return state.element;
+	};
+
+	// password input zone
+	Component input_password = Input(&password, "", password_option);
+	Component secure_input = CatchEvent(input_password, [&](Event event) {
+		if(event==Event::Return) {
+			screen.ExitLoopClosure()();
+			return true;
+		}
+		return false;
+	});
+
+	auto component = Container::Vertical({
+		secure_input,
+	});
+
+	auto renderer = Renderer(component, [&] {
+		return vbox({
+			text(""),
+			window(text(" Password "), secure_input->Render()),
+		}) | size(WIDTH, EQUAL, 48);
+	});
+
+	secure_input->TakeFocus();
+	screen.Loop(renderer);
+
 	std::cout << "\nFile to Process: " << path << "\n";
 
 	bool success = false;
